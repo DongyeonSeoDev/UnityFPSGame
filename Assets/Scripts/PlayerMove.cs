@@ -9,6 +9,10 @@ public class PlayerMove : MonoBehaviour
     public float fireDelay = 0.1f;
     Rigidbody rigid;
 
+    public GameObject firePosition;
+    public float range = 50f;
+    public float damage = 10f;
+
     private AudioSource audioSource;
 
     private float lastFireTime = 0f;
@@ -31,11 +35,26 @@ public class PlayerMove : MonoBehaviour
 
         if(Input.GetButtonDown("Fire1"))
         {
-            if (Time.time - lastFireTime > fireDelay)
+            Fire();
+        }
+    }
+
+    private void Fire()
+    {
+        if (Time.time - lastFireTime > fireDelay)
+        {
+            audioSource.clip = fireSound;
+            audioSource.Play();
+            lastFireTime = Time.time;
+
+            RaycastHit hit;
+            if (Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range))
             {
-                audioSource.clip = fireSound;
-                audioSource.Play();
-                lastFireTime = Time.time;
+                IDamageable target = hit.transform.GetComponent<IDamageable>();
+                if (target != null)
+                {
+                    target.OnDamage(damage);
+                }
             }
         }
     }
