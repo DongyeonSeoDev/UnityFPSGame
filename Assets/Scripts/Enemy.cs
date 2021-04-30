@@ -8,9 +8,13 @@ public class Enemy : MonoBehaviour, IDamageable
     private Color color;
     public float hp = 100;
 
+    public Vector3 maxPosition;
+    public Vector3 minPosition;
+
     private void Awake()
     {
         boxRenderer = GetComponent<Renderer>();
+        transform.localPosition = RandomPosition();
     }
 
     public void OnDamage(float damage)
@@ -37,11 +41,17 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Spawn()
     {
         hp = 100;
+        transform.localPosition = RandomPosition();
         gameObject.SetActive(true);
     }
 
     private void Die()
     {
         gameObject.SetActive(false);
+    }
+
+    private Vector3 RandomPosition()
+    {
+        return new Vector3(Random.Range(minPosition.x, maxPosition.x), transform.localPosition.y, Random.Range(minPosition.y, maxPosition.y));
     }
 }

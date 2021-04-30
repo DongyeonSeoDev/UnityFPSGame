@@ -30,7 +30,7 @@ public class PlayerMove : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        rigid.velocity = transform.forward.normalized * z * speed * Time.deltaTime;
+        rigid.velocity = transform.forward.normalized * (z * speed * Time.deltaTime);
         rigid.rotation = rigid.rotation * Quaternion.Euler(0, x * rotationSpeed * Time.deltaTime, 0);
 
         if(Input.GetButtonDown("Fire1"))
