@@ -6,7 +6,7 @@ public class PlayerMove : MonoBehaviour
 {
     public float speed = 10f;
     public float rotationSpeed = 10f;
-    public float fireDelay = 0.1f;
+    public float fireDelay = 0.2f;
     Rigidbody rigid;
 
     public GameObject firePosition;
@@ -16,6 +16,8 @@ public class PlayerMove : MonoBehaviour
     private AudioSource audioSource;
 
     private float lastFireTime = 0f;
+
+    private bool auto = false;
 
     [Header("Audio clips")]
     public AudioClip fireSound;
@@ -33,13 +35,21 @@ public class PlayerMove : MonoBehaviour
         rigid.velocity = transform.forward.normalized * (z * speed * Time.deltaTime);
         rigid.rotation = rigid.rotation * Quaternion.Euler(0, x * rotationSpeed * Time.deltaTime, 0);
 
-        if(Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") && auto == true)
         {
-            Fire();
+            Fire(damage);
+        }
+        else if (Input.GetButtonDown("Fire1") && auto == false)
+        {
+            Fire(damage * 2);
+        }
+        else if (Input.GetKey(KeyCode.Tab))
+        {
+            auto = !auto;
         }
     }
 
-    private void Fire()
+    private void Fire(float damage)
     {
         if (Time.time - lastFireTime > fireDelay)
         {

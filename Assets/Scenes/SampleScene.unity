@@ -314,7 +314,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 5000
   rotationSpeed: 100
-  fireDelay: 0.1
+  fireDelay: 0.2
   firePosition: {fileID: 922284336}
   range: 50
   damage: 10
