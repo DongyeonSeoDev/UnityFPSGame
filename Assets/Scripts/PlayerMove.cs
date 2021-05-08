@@ -42,12 +42,13 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
-        CameraRotation();
-        CharacterRotation();
     }
 
     void Update()
     {
+        CameraRotation();
+        CharacterRotation();
+
         if (Input.GetButton("Fire1") && auto == true)
         {
             Fire(damage);
