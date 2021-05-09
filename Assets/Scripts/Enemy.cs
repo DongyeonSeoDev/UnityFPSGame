@@ -48,6 +48,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Die()
     {
         gameObject.SetActive(false);
+        GameManager.Instance.Score += 100;
     }
 
     private Vector3 RandomPosition()
