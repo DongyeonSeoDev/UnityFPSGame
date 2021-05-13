@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour, IDamageable
 {
     private Renderer boxRenderer;
@@ -11,10 +13,94 @@ public class Enemy : MonoBehaviour, IDamageable
     public Vector3 maxPosition;
     public Vector3 minPosition;
 
+    private NavMeshAgent agent;
+    private Transform playerTransform;
+
+    public LayerMask whatIsGround, whatIsPlayer;
+
+    public Vector3 walkPoint;
+    private bool isWalkPointSet = false;
+    public float walkPointRange;
+
+    public float fireDelay;
+    private bool isAlreadyFire;
+    public GameObject fireEffect;
+
+    public float sightRange, attackRange;
+    public bool isPlayerInSightRange, isPlayerInAttackRange;
+
     private void Awake()
     {
         boxRenderer = GetComponent<Renderer>();
         transform.localPosition = RandomPosition();
+        agent = GetComponent<NavMeshAgent>();
+        playerTransform = GameObject.Find("Player").transform;
+    }
+
+    private void Update()
+    {
+        isPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
+        isPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+
+        if (!isPlayerInSightRange && !isPlayerInAttackRange) Patrolling();
+
+        if (isPlayerInSightRange && !isPlayerInAttackRange) ChasePlayer();
+
+        if (isPlayerInSightRange && isPlayerInAttackRange) AttackPlayer();
+    }
+
+    private void Patrolling()
+    {
+        if (isWalkPointSet) SearchWalkPoint();
+        else agent.SetDestination(walkPoint);
+
+        Vector3 distToWalkPoint = transform.position - walkPoint;
+        if (distToWalkPoint.sqrMagnitude <= 1f) isWalkPointSet = false;
+    }
+
+    private void SearchWalkPoint()
+    {
+        float randomX = Random.Range(-walkPointRange, walkPointRange);
+        float randomZ = Random.Range(-walkPointRange, walkPointRange);
+
+        Vector3 pos = transform.position;
+        walkPoint = new Vector3(pos.x + randomX, pos.y, pos.z + randomZ);
+
+        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        {
+            isWalkPointSet = true;
+        }
+    }
+
+    private void ChasePlayer()
+    {
+        agent.SetDestination(playerTransform.position);
+    }
+
+    private void AttackPlayer()
+    {
+        agent.SetDestination(transform.position);
+
+        transform.LookAt(playerTransform);
+        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+        if(!isAlreadyFire)
+        {
+            fireEffect.SetActive(true);
+            isAlreadyFire = true;
+            Invoke("EndFire", 0.1f);
+            Invoke("ResetAttack", fireDelay);
+        }
+    }
+
+    private void EndFire()
+    {
+        fireEffect.SetActive(false);
+    }
+
+    private void ResetAttack()
+    {
+        isAlreadyFire = false;
     }
 
     public void OnDamage(float damage)
