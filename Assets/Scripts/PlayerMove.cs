@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -29,6 +30,8 @@ public class PlayerMove : MonoBehaviour
     public AudioClip fireSound;
 
     private Collider myCollider;
+
+    public CanvasGroup damagePanel;
 
     private void Awake()
     {
@@ -112,5 +115,16 @@ public class PlayerMove : MonoBehaviour
             }
             myCollider.enabled = true;
         }
+    }
+
+    public void Damage()
+    {
+        damagePanel.alpha = 1;
+        Invoke("EndDamage", 0.2f);
+    }
+
+    private void EndDamage()
+    {
+        damagePanel.alpha = 0;
     }
 }

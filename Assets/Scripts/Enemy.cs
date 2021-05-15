@@ -24,10 +24,15 @@ public class Enemy : MonoBehaviour, IDamageable
 
     public float fireDelay;
     private bool isAlreadyFire;
-    public GameObject fireEffect;
 
     public float sightRange, attackRange;
     public bool isPlayerInSightRange, isPlayerInAttackRange;
+
+    public Transform firePosition;
+    public float fireDistance;
+
+    private PlayerMove playerMove;
+    public LineRenderer bulletLineRenderer;
 
     private void Awake()
     {
@@ -35,6 +40,8 @@ public class Enemy : MonoBehaviour, IDamageable
         transform.localPosition = RandomPosition();
         agent = GetComponent<NavMeshAgent>();
         playerTransform = GameObject.Find("Player").transform;
+
+        playerMove = FindObjectOfType<PlayerMove>();
     }
 
     private void Update()
@@ -86,16 +93,38 @@ public class Enemy : MonoBehaviour, IDamageable
 
         if(!isAlreadyFire)
         {
-            fireEffect.SetActive(true);
             isAlreadyFire = true;
+
+            Fire();
+
             Invoke("EndFire", 0.1f);
             Invoke("ResetAttack", fireDelay);
         }
     }
 
+    private void Fire()
+    {
+        RaycastHit hit;
+        Vector3 hitPosition = Vector3.zero;
+        if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, fireDistance, whatIsPlayer))
+        {
+            hitPosition = hit.point;
+            playerMove.Damage();
+        }
+        else
+        {
+            hitPosition = firePosition.position + firePosition.forward * fireDistance;
+        }
+
+        bulletLineRenderer.SetPosition(1, bulletLineRenderer.transform.InverseTransformPoint(hitPosition));
+        bulletLineRenderer.gameObject.SetActive(true);
+
+        Invoke("EndFire", 0.2f);
+    }
+
     private void EndFire()
     {
-        fireEffect.SetActive(false);
+        bulletLineRenderer.gameObject.SetActive(false);
     }
 
     private void ResetAttack()
