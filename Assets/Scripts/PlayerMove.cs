@@ -31,7 +31,15 @@ public class PlayerMove : MonoBehaviour
 
     private Collider myCollider;
 
-    public CanvasGroup damagePanel;
+    public GameObject damagePanel;
+
+    public int maxHp = 100;
+    private int hp;
+    public Text hpText;
+    public Image hpBar;
+
+    public GameObject gameOverPanel;
+    public Text gameOverScoreText;
 
     private void Awake()
     {
@@ -40,6 +48,10 @@ public class PlayerMove : MonoBehaviour
         myCollider = GetComponent<CapsuleCollider>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        hp = maxHp;
+        hpText.text = "HP: " + hp + '/' + maxHp;
+        hpBar.fillAmount = (float)hp / maxHp;
     }
 
     private void FixedUpdate()
@@ -117,14 +129,28 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    public void Damage()
+    public void Damage(int damage)
     {
-        damagePanel.alpha = 1;
+        damagePanel.SetActive(true);
         Invoke("EndDamage", 0.2f);
+
+        hp -= damage;
+
+        if (hp < 0) hp = 0;
+
+        hpText.text = "HP: " + hp + '/' + maxHp;
+        hpBar.fillAmount = (float)hp / maxHp;
+
+        if (hp == 0)
+        {
+            gameOverPanel.SetActive(true);
+            gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
+            Time.timeScale = 0f;
+        }
     }
 
     private void EndDamage()
     {
-        damagePanel.alpha = 0;
+        damagePanel.SetActive(false);
     }
 }

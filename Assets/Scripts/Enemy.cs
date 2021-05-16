@@ -34,6 +34,8 @@ public class Enemy : MonoBehaviour, IDamageable
     private PlayerMove playerMove;
     public LineRenderer bulletLineRenderer;
 
+    public int attack;
+
     private void Awake()
     {
         boxRenderer = GetComponent<Renderer>();
@@ -109,7 +111,7 @@ public class Enemy : MonoBehaviour, IDamageable
         if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, fireDistance, whatIsPlayer))
         {
             hitPosition = hit.point;
-            playerMove.Damage();
+            playerMove.Damage(attack);
         }
         else
         {
