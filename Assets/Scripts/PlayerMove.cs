@@ -46,8 +46,6 @@ public class PlayerMove : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         myRigidbody = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
 
         hp = maxHp;
         hpText.text = "HP: " + hp + '/' + maxHp;
@@ -146,6 +144,8 @@ public class PlayerMove : MonoBehaviour
             gameOverPanel.SetActive(true);
             gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
             Time.timeScale = 0f;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
         }
     }
 

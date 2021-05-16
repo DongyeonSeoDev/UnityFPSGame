@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -35,7 +36,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
     private void Awake()
     {
         if (instance != null)
@@ -47,6 +47,20 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         Score = 0;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
+    public void clickReStart()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Main");
+    }
+
+    public void clickEnd()
+    {
+        Time.timeScale = 1f;
+        Application.Quit();
+    }
 }
