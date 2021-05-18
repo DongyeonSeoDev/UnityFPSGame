@@ -41,6 +41,8 @@ public class PlayerMove : MonoBehaviour
     public GameObject gameOverPanel;
     public Text gameOverScoreText;
 
+    public ParticleSystem particle;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -59,6 +61,8 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.Instance.isPlay) return;
+
         CameraRotation();
         CharacterRotation();
 
@@ -123,6 +127,9 @@ public class PlayerMove : MonoBehaviour
                     target.OnDamage(damage);
                 }
             }
+
+            particle.Play();
+
             myCollider.enabled = true;
         }
     }
@@ -141,6 +148,7 @@ public class PlayerMove : MonoBehaviour
 
         if (hp == 0)
         {
+            GameManager.Instance.isPlay = false;
             gameOverPanel.SetActive(true);
             gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
             Time.timeScale = 0f;

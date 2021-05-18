@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public bool isPlay;
+
     private void Awake()
     {
         if (instance != null)
@@ -47,6 +49,7 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         Score = 0;
+        isPlay = true;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
