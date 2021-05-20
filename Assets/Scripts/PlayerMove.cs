@@ -78,6 +78,11 @@ public class PlayerMove : MonoBehaviour
         {
             auto = !auto;
         }
+
+        if(transform.position.y <= -50f)
+        {
+            GameOver();
+        }
     }
 
     private void Move()
@@ -148,13 +153,18 @@ public class PlayerMove : MonoBehaviour
 
         if (hp == 0)
         {
-            GameManager.Instance.isPlay = false;
-            gameOverPanel.SetActive(true);
-            gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
-            Time.timeScale = 0f;
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            GameOver();
         }
+    }
+
+    private void GameOver()
+    {
+        GameManager.Instance.isPlay = false;
+        gameOverPanel.SetActive(true);
+        gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
+        Time.timeScale = 0f;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void EndDamage()

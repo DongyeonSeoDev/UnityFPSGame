@@ -170,6 +170,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private Vector3 RandomPosition()
     {
-        return new Vector3(Random.Range(minPosition.x, maxPosition.x), transform.localPosition.y, Random.Range(minPosition.y, maxPosition.y));
+        return new Vector3(Random.Range(minPosition.x, maxPosition.x), transform.localPosition.y, Random.Range(minPosition.z, maxPosition.z));
     }
 }
