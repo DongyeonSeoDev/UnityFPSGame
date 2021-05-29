@@ -6,8 +6,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class Enemy : MonoBehaviour, IDamageable
 {
-    private Renderer boxRenderer;
     private Color color;
+    public Renderer enemyRenderer;
     public float hp = 100;
 
     public Vector3 maxPosition;
@@ -33,17 +33,19 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private PlayerMove playerMove;
     public LineRenderer bulletLineRenderer;
+    public Animator animator;
 
     public int attack;
 
+    private readonly int hashMove = Animator.StringToHash("isMove");
+    private readonly int hashShoot = Animator.StringToHash("isShoot");
+
     private void Awake()
     {
-        boxRenderer = GetComponent<Renderer>();
         transform.localPosition = RandomPosition();
         agent = GetComponent<NavMeshAgent>();
-        playerTransform = GameObject.Find("Player").transform;
-
         playerMove = FindObjectOfType<PlayerMove>();
+        playerTransform = playerMove.gameObject.transform;
     }
 
     private void Update()
@@ -60,8 +62,12 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Patrolling()
     {
-        if (isWalkPointSet) SearchWalkPoint();
+        if (!isWalkPointSet) SearchWalkPoint();
         else agent.SetDestination(walkPoint);
+        {
+            
+            animator.SetBool(hashMove, true);
+        }
 
         Vector3 distToWalkPoint = transform.position - walkPoint;
         if (distToWalkPoint.sqrMagnitude <= 1f) isWalkPointSet = false;
@@ -84,11 +90,13 @@ public class Enemy : MonoBehaviour, IDamageable
     private void ChasePlayer()
     {
         agent.SetDestination(playerTransform.position);
+        animator.SetBool(hashMove, true);
     }
 
     private void AttackPlayer()
     {
         agent.SetDestination(transform.position);
+        animator.SetBool(hashMove, false);
 
         transform.LookAt(playerTransform);
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
@@ -106,6 +114,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Fire()
     {
+        animator.SetBool(hashShoot, true);
+
         RaycastHit hit;
         Vector3 hitPosition = Vector3.zero;
         if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, fireDistance, whatIsPlayer))
@@ -127,6 +137,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private void EndFire()
     {
         bulletLineRenderer.gameObject.SetActive(false);
+        animator.SetBool(hashShoot, false);
     }
 
     private void ResetAttack()
@@ -152,7 +163,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void ChangeColor()
     {
-        boxRenderer.material.SetColor("_Color", color);
+        enemyRenderer.material.SetColor("_Color", color);
     }
 
     private void Spawn()
