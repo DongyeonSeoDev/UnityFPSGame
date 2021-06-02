@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
     public void clickReStart()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Main");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void clickEnd()

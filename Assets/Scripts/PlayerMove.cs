@@ -43,6 +43,8 @@ public class PlayerMove : MonoBehaviour
 
     public ParticleSystem particle;
 
+    public GameObject gun;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
@@ -160,6 +162,7 @@ public class PlayerMove : MonoBehaviour
     private void GameOver()
     {
         GameManager.Instance.isPlay = false;
+        gun.SetActive(false);
         gameOverPanel.SetActive(true);
         gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
         Time.timeScale = 0f;

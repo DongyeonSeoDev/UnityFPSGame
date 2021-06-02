@@ -118,10 +118,13 @@ public class Enemy : MonoBehaviour, IDamageable
 
         RaycastHit hit;
         Vector3 hitPosition = Vector3.zero;
-        if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, fireDistance, whatIsPlayer))
+        if (Physics.Raycast(firePosition.position, firePosition.forward, out hit, fireDistance))
         {
             hitPosition = hit.point;
-            playerMove.Damage(attack);
+            if (hit.transform == playerTransform)
+            {
+                playerMove.Damage(attack);
+            }
         }
         else
         {
