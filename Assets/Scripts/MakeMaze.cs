@@ -142,5 +142,8 @@ public class MakeMaze : MonoBehaviour
                 }
             }
         }
+
+		stage.transform.GetChild(11).gameObject.SetActive(false);
+		stage.transform.GetChild(109).gameObject.SetActive(false);
 	}
 }

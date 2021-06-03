@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private NavMeshAgent agent;
     private Transform playerTransform;
 
-    public LayerMask whatIsGround, whatIsPlayer;
+    public LayerMask whatIsGround, whatIsPlayer, whatIsWall;
 
     public Vector3 walkPoint;
     private bool isWalkPointSet = false;
@@ -81,7 +81,7 @@ public class Enemy : MonoBehaviour, IDamageable
         Vector3 pos = transform.position;
         walkPoint = new Vector3(pos.x + randomX, pos.y, pos.z + randomZ);
 
-        if(Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
+        if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && !Physics.CheckSphere(walkPoint, 0.01f, whatIsWall))
         {
             isWalkPointSet = true;
         }
@@ -185,5 +185,11 @@ public class Enemy : MonoBehaviour, IDamageable
     private Vector3 RandomPosition()
     {
         return new Vector3(Random.Range(minPosition.x, maxPosition.x), transform.localPosition.y, Random.Range(minPosition.z, maxPosition.z));
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, 2f);
     }
 }
