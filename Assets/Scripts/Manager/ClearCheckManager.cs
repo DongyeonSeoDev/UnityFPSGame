@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ClearCheck : MonoBehaviour
+public class ClearCheckManager : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {

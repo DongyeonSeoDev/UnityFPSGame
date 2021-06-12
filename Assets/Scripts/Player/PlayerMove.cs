@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +36,38 @@ public class PlayerMove : MonoBehaviour
 
     public int maxHp = 100;
     private int hp;
+
+    public int Hp 
+    {
+        get { return hp; }
+        set 
+        {
+            if (value > maxHp)
+            {
+                hp = maxHp;
+            }
+            else
+            {
+                hp = value;
+            }
+
+            if (hp < 0) hp = 0;
+
+            sb.Remove(0, sb.Length);
+            sb.Append("HP: ");
+            sb.Append(hp);
+            sb.Append('/');
+            sb.Append(maxHp);
+            hpText.text = sb.ToString();
+            hpBar.fillAmount = (float)hp / maxHp;
+
+            if (hp == 0)
+            {
+                GameOver();
+            }
+        }
+    }
+
     public Text hpText;
     public Image hpBar;
 
@@ -45,15 +78,17 @@ public class PlayerMove : MonoBehaviour
 
     public GameObject gun;
 
+    private StringBuilder sb = new StringBuilder(11);
+
+    public int def = 0;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
         myRigidbody = GetComponent<Rigidbody>();
         myCollider = GetComponent<CapsuleCollider>();
 
-        hp = maxHp;
-        hpText.text = "HP: " + hp + '/' + maxHp;
-        hpBar.fillAmount = (float)hp / maxHp;
+        Hp = maxHp;
     }
 
     private void FixedUpdate()
@@ -146,25 +181,21 @@ public class PlayerMove : MonoBehaviour
         damagePanel.SetActive(true);
         Invoke("EndDamage", 0.2f);
 
-        hp -= damage;
-
-        if (hp < 0) hp = 0;
-
-        hpText.text = "HP: " + hp + '/' + maxHp;
-        hpBar.fillAmount = (float)hp / maxHp;
-
-        if (hp == 0)
+        if (damage - def < 1)
         {
-            GameOver();
+            Hp -= 1;
+        }
+        else
+        {
+            Hp -= (damage - def);
         }
     }
 
     private void GameOver()
     {
-        GameManager.Instance.isPlay = false;
+        GameManager.Instance.GameOver();
         gun.SetActive(false);
         gameOverPanel.SetActive(true);
-        gameOverScoreText.text = "Score: " + GameManager.Instance.Score;
         Time.timeScale = 0f;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class MakeMaze : MonoBehaviour
 {
-	struct Position
+	public struct Position
 	{
 		public int x;
 		public int y;
@@ -68,6 +68,8 @@ public class MakeMaze : MonoBehaviour
 	private GameObject[,] stages = new GameObject[11, 11];
 
 	public GameObject stage;
+
+	public List<Vector3> enablePosition = new List<Vector3>();
 
 	private void Awake()
     {
@@ -139,6 +141,7 @@ public class MakeMaze : MonoBehaviour
 				if (maze[i, j] == 0)
                 {
 					stages[i, j].SetActive(false);
+					enablePosition.Add(stages[i, j].transform.position);
                 }
             }
         }

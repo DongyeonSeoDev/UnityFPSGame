@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour, IDamageable
 {
     private Color color;
     public Renderer enemyRenderer;
-    public float hp = 100;
+    public float hp = 100f;
 
     public Vector3 maxPosition;
     public Vector3 minPosition;
@@ -80,7 +80,6 @@ public class Enemy : MonoBehaviour, IDamageable
 
         Vector3 pos = transform.position;
         walkPoint = new Vector3(pos.x + randomX, pos.y, pos.z + randomZ);
-
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround) && !Physics.CheckSphere(walkPoint, 0.01f, whatIsWall))
         {
             isWalkPointSet = true;
@@ -179,7 +178,6 @@ public class Enemy : MonoBehaviour, IDamageable
     private void Die()
     {
         gameObject.SetActive(false);
-        GameManager.Instance.Score += 100;
     }
 
     private Vector3 RandomPosition()
