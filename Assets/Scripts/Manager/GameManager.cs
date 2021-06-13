@@ -92,10 +92,10 @@ public class GameManager : MonoBehaviour
     {
         isPlay = false;
 
-        gameOverTimeText.text = TimeDisplay();
+        gameOverTimeText.text = "Time: " +TimeDisplay();
     }
 
-    private string TimeDisplay()
+    public string TimeDisplay()
     {
         int minute = (int)time / 60;
         int second = (int)time - minute * 60;
