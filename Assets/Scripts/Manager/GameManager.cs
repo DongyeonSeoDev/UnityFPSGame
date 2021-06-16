@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Text timeText = null;
     [SerializeField] private Text gameOverTimeText = null;
+    [SerializeField] private Text gunStateText = null;
+    [SerializeField] private string[] gunStateTexts;
     private float time = 0f;
 
     private StringBuilder sb = new StringBuilder(8);
@@ -48,6 +50,11 @@ public class GameManager : MonoBehaviour
         if (gameOverTimeText == null)
         {
             Debug.LogError("gameOverTimeText에 Text가 없습니다.");
+        }
+
+        if (gunStateText == null)
+        {
+            Debug.LogError("gunStateText에 Text가 없습니다.");
         }
 
         instance = this;
@@ -109,5 +116,10 @@ public class GameManager : MonoBehaviour
         sb.Append(timeCheck(millisecond));
 
         return sb.ToString();
+    }
+
+    public void GunModeUIChange(int textNumber)
+    {
+        gunStateText.text = gunStateTexts[textNumber];
     }
 }

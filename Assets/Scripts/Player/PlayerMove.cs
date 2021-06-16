@@ -18,7 +18,7 @@ public class PlayerMove : MonoBehaviour
 
     private float lastFireTime = 0f;
 
-    private bool auto = false;
+    private bool autoGun = false;
 
     public float lookSensitivity;
     public float cameraRotationLimit;
@@ -103,19 +103,19 @@ public class PlayerMove : MonoBehaviour
         CameraRotation();
         CharacterRotation();
 
-        if (Input.GetButton("Fire1") && auto == true)
+        if (Input.GetButton("Fire1") && autoGun == true)
         {
             Fire(damage);
         }
-        else if (Input.GetButtonDown("Fire1") && auto == false)
+        else if (Input.GetButtonDown("Fire1") && autoGun == false)
         {
-            Fire(damage * 2);
+            Fire(damage * 1.5f);
         }
-        else if (Input.GetKey(KeyCode.Tab))
+        else if (Input.GetKeyDown(KeyCode.Tab))
         {
-            auto = !auto;
+            autoGun = !autoGun;
+            GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
         }
-
         if(transform.position.y <= -50f)
         {
             GameOver();
