@@ -160,8 +160,12 @@ public class PlayerMove : MonoBehaviour
             lastFireTime = Time.time;
 
             RaycastHit hit;
+
             myCollider.enabled = false;
-            if (Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range))
+            bool rayCastValue = Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range);
+            myCollider.enabled = true;
+
+            if (rayCastValue)
             {
                 IDamageable target = hit.transform.GetComponent<IDamageable>();
                 if (target != null)
@@ -171,8 +175,6 @@ public class PlayerMove : MonoBehaviour
             }
 
             particle.Play();
-
-            myCollider.enabled = true;
         }
     }
 
