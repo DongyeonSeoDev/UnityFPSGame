@@ -71,7 +71,6 @@ public class PlayerMove : MonoBehaviour
     public Text hpText;
     public Image hpBar;
 
-    public GameObject gameOverPanel;
     public Text gameOverScoreText;
 
     public ParticleSystem particle;
@@ -197,10 +196,6 @@ public class PlayerMove : MonoBehaviour
     {
         GameManager.Instance.GameOver();
         gun.SetActive(false);
-        gameOverPanel.SetActive(true);
-        Time.timeScale = 0f;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Confined;
     }
 
     private void EndDamage()

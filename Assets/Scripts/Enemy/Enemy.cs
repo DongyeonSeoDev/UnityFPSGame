@@ -40,12 +40,15 @@ public class Enemy : MonoBehaviour, IDamageable
     private readonly int hashMove = Animator.StringToHash("isMove");
     private readonly int hashShoot = Animator.StringToHash("isShoot");
 
+    private AudioSource audioSource = null;
+
     private void Awake()
     {
         transform.localPosition = RandomPosition();
         agent = GetComponent<NavMeshAgent>();
         playerMove = FindObjectOfType<PlayerMove>();
         playerTransform = playerMove.gameObject.transform;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -132,6 +135,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
         bulletLineRenderer.SetPosition(1, bulletLineRenderer.transform.InverseTransformPoint(hitPosition));
         bulletLineRenderer.gameObject.SetActive(true);
+        audioSource.Play();
 
         Invoke("EndFire", 0.2f);
     }

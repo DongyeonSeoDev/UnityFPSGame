@@ -4,6 +4,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using DG.Tweening;
 
 
 public class GameManager : MonoBehaviour
@@ -14,6 +15,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text gameOverTimeText = null;
     [SerializeField] private Text gunStateText = null;
     [SerializeField] private string[] gunStateTexts;
+
+    public CanvasGroup gameOverCanvasGroup;
+    /// <summary>
+    /// 0: RestartBtn
+    /// 1: EndBtn
+    /// </summary>
+    public Button[] gameOverButton;
+
     private float time = 0f;
 
     private StringBuilder sb = new StringBuilder(8);
@@ -57,6 +66,33 @@ public class GameManager : MonoBehaviour
             Debug.LogError("gunStateText에 Text가 없습니다.");
         }
 
+        if (gameOverCanvasGroup == null)
+        {
+            Debug.LogError("gameOverCanvasGroup이 없습니다.");
+        }
+
+        if (gameOverButton[0] == null)
+        {
+            Debug.LogError("ReSetButton이 없습니다.");
+        }
+
+        if (gameOverButton[1] == null)
+        {
+            Debug.LogError("EndButton이 없습니다.");
+        }
+
+        gameOverButton[0].onClick.AddListener(() =>
+        {
+            Time.timeScale = 1f;
+            gameOverCanvasGroup.DOKill();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        });
+
+        gameOverButton[1].onClick.AddListener(() =>
+        {
+            Application.Quit();
+        });
+
         instance = this;
         isPlay = true;
 
@@ -83,23 +119,21 @@ public class GameManager : MonoBehaviour
         return time.ToString();
     }
 
-    public void clickReStart()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    }
-
-    public void clickEnd()
-    {
-        Time.timeScale = 1f;
-        Application.Quit();
-    }
-
     public void GameOver()
     {
         isPlay = false;
+        gameOverTimeText.text = "Time: " + TimeDisplay();
 
-        gameOverTimeText.text = "Time: " +TimeDisplay();
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.Confined;
+
+        gameOverCanvasGroup.blocksRaycasts = true;
+        gameOverCanvasGroup.interactable = true;
+
+        gameOverCanvasGroup.DOFade(1f, 0.5f).OnComplete(() =>
+        {
+            Time.timeScale = 0f;
+        });
     }
 
     public string TimeDisplay()

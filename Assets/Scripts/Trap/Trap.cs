@@ -10,6 +10,8 @@ public class Trap : MonoBehaviour
 
     private readonly int hashIsShow = Animator.StringToHash("IsShow");
 
+    private AudioSource audioSource;
+
     private void Awake()
     {
         if (animator == null)
@@ -24,6 +26,13 @@ public class Trap : MonoBehaviour
             Debug.LogError("makeMaze가 없습니다.");
         }
 
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+        {
+            Debug.LogError("audioSource가 없습니다.");
+        }
+
         int randomNum = Random.Range(0, makeMaze.enablePosition.Count);
         transform.position = makeMaze.enablePosition[randomNum];
         makeMaze.enablePosition.RemoveAt(randomNum);
@@ -34,6 +43,7 @@ public class Trap : MonoBehaviour
     {
         if (other.CompareTag("PLAYER"))
         {
+            audioSource.Play();
             animator.SetBool(hashIsShow, true);
         }
     }

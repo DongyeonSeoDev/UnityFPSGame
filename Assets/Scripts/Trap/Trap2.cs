@@ -8,6 +8,8 @@ public class Trap2 : MonoBehaviour
 
     private MakeMaze makeMaze = null;
 
+    private AudioSource audioSource;
+
     private void Awake()
     {
         if (particle == null)
@@ -22,6 +24,13 @@ public class Trap2 : MonoBehaviour
             Debug.LogError("makeMaze가 없습니다.");
         }
 
+        audioSource = GetComponent<AudioSource>();
+
+        if (audioSource == null)
+        {
+            Debug.LogError("audioSource가 없습니다.");
+        }
+
         int randomNum = Random.Range(0, makeMaze.enablePosition.Count);
         transform.position = makeMaze.enablePosition[randomNum];
         makeMaze.enablePosition.RemoveAt(randomNum);
@@ -33,6 +42,7 @@ public class Trap2 : MonoBehaviour
         if (other.CompareTag("PLAYER"))
         {
             particle.Play();
+            audioSource.Play();
         }
     }
 
@@ -41,6 +51,7 @@ public class Trap2 : MonoBehaviour
         if (other.CompareTag("PLAYER"))
         {
             particle.Stop();
+            audioSource.Stop();
         }
     }
 }
