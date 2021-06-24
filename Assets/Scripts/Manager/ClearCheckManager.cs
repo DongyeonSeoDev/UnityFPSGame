@@ -12,14 +12,40 @@ public class ClearCheckManager : MonoBehaviour
 
     /// <summary>
     /// 0: ExitBtn
+    /// 1: NextBtn
     /// </summary>
     public Button[] clearButton;
 
+    public AudioSource sound;
+    public AudioClip clip;
+
+    private PlayerMove playerMove = null;
+    private GameStateManager gameStateManager = null;
+
     private void Awake()
     {
+        playerMove = FindObjectOfType<PlayerMove>();
+
+        if (playerMove == null)
+        {
+            Debug.LogError("playerMove가 없습니다.");
+        }
+
+        gameStateManager = GameStateManager.Instance;
+
+        if (gameStateManager == null)
+        {
+            Debug.LogError("gameStateManager가 없습니다.");
+        }
+
         if (clearButton[0] == null)
         {
             Debug.LogError("exitButton이 없습니다.");
+        }
+
+        if (clearButton[1] == null)
+        {
+            Debug.LogError("clearButton이 없습니다.");
         }
 
         if (clearCanvasGroup == null)
@@ -32,9 +58,31 @@ public class ClearCheckManager : MonoBehaviour
             Debug.LogError("timeText에 Text가 없습니다.");
         }
 
+        if (sound == null)
+        {
+            Debug.LogError("sound가 없습니다.");
+        }
+
+        if (clip == null)
+        {
+            Debug.LogError("clip이 없습니다.");
+        }
+
         clearButton[0].onClick.AddListener(() =>
         {
             Application.Quit();
+        });
+
+        clearButton[1].onClick.AddListener(() =>
+        {
+            Time.timeScale = 1f;
+
+            gameStateManager.playerHP = playerMove.Hp;
+            gameStateManager.playerDef = playerMove.def;
+            gameStateManager.playerDamage = playerMove.damage;
+            gameStateManager.stage++;
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });
     }
 
@@ -50,6 +98,10 @@ public class ClearCheckManager : MonoBehaviour
 
             clearCanvasGroup.blocksRaycasts = true;
             clearCanvasGroup.interactable = true;
+
+            sound.clip = clip;
+            sound.loop = false;
+            sound.Play();
 
             if (clearCanvasGroup != null)
             {

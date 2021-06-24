@@ -30,12 +30,23 @@ public class PlayerMove : MonoBehaviour
     [Header("Audio clips")]
     public AudioClip fireSound;
 
-    private Collider myCollider;
-
     public GameObject damagePanel;
 
     public int maxHp = 100;
     private int hp;
+
+    public Text hpText;
+    public Image hpBar;
+
+    public Text gameOverScoreText;
+    public ParticleSystem particle;
+    public GameObject gun;
+    private StringBuilder sb = new StringBuilder(11);
+
+    public int def = 0;
+    private bool isCollision = false;
+
+    public LayerMask whatIsAttackable;
 
     public int Hp 
     {
@@ -68,26 +79,23 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    public Text hpText;
-    public Image hpBar;
-
-    public Text gameOverScoreText;
-
-    public ParticleSystem particle;
-
-    public GameObject gun;
-
-    private StringBuilder sb = new StringBuilder(11);
-
-    public int def = 0;
+    GameStateManager gameStateManager = null;
 
     private void Awake()
     {
+        gameStateManager = GameStateManager.Instance;
+
+        if (gameStateManager == null)
+        {
+            Debug.LogError("gameStateManager가 없습니다.");
+        }
+
         audioSource = GetComponent<AudioSource>();
         myRigidbody = GetComponent<Rigidbody>();
-        myCollider = GetComponent<CapsuleCollider>();
 
-        Hp = maxHp;
+        damage = gameStateManager.playerDamage;
+        hp = gameStateManager.playerHP;
+        def = gameStateManager.playerDef;
     }
 
     private void FixedUpdate()
@@ -121,6 +129,19 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("WALL"))
+        {
+            isCollision = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        isCollision = false;
+    }
+
     private void Move()
     {
         float x = Input.GetAxisRaw("Horizontal");
@@ -128,8 +149,12 @@ public class PlayerMove : MonoBehaviour
 
         Vector3 moveHorizontal = transform.right * x;
         Vector3 moveVertical = transform.forward * z;
-
         Vector3 velocity = (moveHorizontal + moveVertical).normalized * speed;
+
+        if (isCollision)
+        {
+            return;
+        }
 
         myRigidbody.MovePosition(transform.position + velocity);
     }
@@ -138,6 +163,12 @@ public class PlayerMove : MonoBehaviour
     {
         float xRotation = Input.GetAxis("Mouse Y");
         float cameraRotationX = xRotation * lookSensitivity;
+
+        if (isCollision)
+        {
+            cameraRotationX *= 0.01f;
+        }
+        
         currentCameraRotationX -= cameraRotationX;
         currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
         theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0f, 0f);
@@ -160,9 +191,7 @@ public class PlayerMove : MonoBehaviour
 
             RaycastHit hit;
 
-            myCollider.enabled = false;
-            bool rayCastValue = Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range);
-            myCollider.enabled = true;
+            bool rayCastValue = Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range, whatIsAttackable);
 
             if (rayCastValue)
             {

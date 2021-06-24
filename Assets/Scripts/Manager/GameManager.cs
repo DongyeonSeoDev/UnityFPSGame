@@ -42,6 +42,9 @@ public class GameManager : MonoBehaviour
 
     public bool isPlay;
 
+    public AudioSource sound;
+    public AudioClip clip;
+
     private void Awake()
     {
         if (instance != null)
@@ -79,6 +82,16 @@ public class GameManager : MonoBehaviour
         if (gameOverButton[1] == null)
         {
             Debug.LogError("EndButton이 없습니다.");
+        }
+
+        if (sound == null)
+        {
+            Debug.LogError("sound가 없습니다.");
+        }
+
+        if (clip == null)
+        {
+            Debug.LogError("clip이 없습니다.");
         }
 
         gameOverButton[0].onClick.AddListener(() =>
@@ -129,6 +142,10 @@ public class GameManager : MonoBehaviour
 
         gameOverCanvasGroup.blocksRaycasts = true;
         gameOverCanvasGroup.interactable = true;
+
+        sound.clip = clip;
+        sound.loop = false;
+        sound.Play();
 
         gameOverCanvasGroup.DOFade(1f, 0.5f).OnComplete(() =>
         {

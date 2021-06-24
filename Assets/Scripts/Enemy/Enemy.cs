@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour, IDamageable
     private bool isAlreadyFire;
 
     public float sightRange, attackRange;
-    public bool isPlayerInSightRange, isPlayerInAttackRange;
+    public bool isPlayerInSightRange, isPlayerInAttackRange, isWallCheck;
 
     public Transform firePosition;
     public float fireDistance;
@@ -55,12 +55,20 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         isPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
+        isWallCheck = Physics.CheckSphere(firePosition.position, 0.01f, whatIsWall);
 
         if (!isPlayerInSightRange && !isPlayerInAttackRange) Patrolling();
 
         if (isPlayerInSightRange && !isPlayerInAttackRange) ChasePlayer();
 
-        if (isPlayerInSightRange && isPlayerInAttackRange) AttackPlayer();
+        if (isPlayerInSightRange && isPlayerInAttackRange && !isWallCheck)
+        {
+            AttackPlayer();
+        }
+        else if ((isPlayerInSightRange && isPlayerInAttackRange))
+        {
+            ChasePlayer();
+        }
     }
 
     private void Patrolling()
@@ -73,7 +81,7 @@ public class Enemy : MonoBehaviour, IDamageable
         }
 
         Vector3 distToWalkPoint = transform.position - walkPoint;
-        if (distToWalkPoint.sqrMagnitude <= 1f) isWalkPointSet = false;
+        if (distToWalkPoint.sqrMagnitude <= 3f) isWalkPointSet = false;
     }
 
     private void SearchWalkPoint()
@@ -193,5 +201,11 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position, 2f);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, sightRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }

@@ -38,6 +38,8 @@ public class StartSceneManager : MonoBehaviour
             Debug.Log("spriteRenderer가 없습니다.");
         }
 
+        Invoke("soundPlay", 0.5f);
+
         image.DOColor(new Color(0, 0, 0, 0), 2f).OnComplete(() =>
         {
             if (startButton != null)
@@ -56,5 +58,10 @@ public class StartSceneManager : MonoBehaviour
                 });
             }
         });
+    }
+
+    private void soundPlay()
+    {
+        audioSource.Play();
     }
 }
