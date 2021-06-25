@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public Button[] gameOverButton;
 
-    private float time = 0f;
+    public float time = 0f;
 
     private StringBuilder sb = new StringBuilder(8);
 
@@ -44,6 +44,8 @@ public class GameManager : MonoBehaviour
 
     public AudioSource sound;
     public AudioClip clip;
+
+    public Text stageText;
 
     private void Awake()
     {
@@ -94,6 +96,11 @@ public class GameManager : MonoBehaviour
             Debug.LogError("clip이 없습니다.");
         }
 
+        if (stageText == null)
+        {
+            Debug.LogError("stageText가 없습니다.");
+        }
+
         gameOverButton[0].onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
@@ -108,6 +115,15 @@ public class GameManager : MonoBehaviour
 
         instance = this;
         isPlay = true;
+
+        sb.Remove(0, sb.Length);
+        sb.Append(GameStateManager.Instance.stage);
+        sb.Append(" 스테이지");
+
+        stageText.text = sb.ToString();
+        time = GameStateManager.Instance.time;
+
+        timeText.text = TimeDisplay();
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

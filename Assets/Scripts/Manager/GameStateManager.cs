@@ -8,6 +8,8 @@ public class GameStateManager : MonoBehaviour
     public int playerDef = 0;
     public float playerDamage = 10f;
     public int stage = 1;
+    public float time = 0f;
+    public bool autoGun = false;
 
     private static GameStateManager instance = null;
 

@@ -76,11 +76,14 @@ public class ClearCheckManager : MonoBehaviour
         clearButton[1].onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
+            clearCanvasGroup.DOKill();
 
             gameStateManager.playerHP = playerMove.Hp;
             gameStateManager.playerDef = playerMove.def;
             gameStateManager.playerDamage = playerMove.damage;
+            gameStateManager.autoGun = playerMove.autoGun;
             gameStateManager.stage++;
+            gameStateManager.time = GameManager.Instance.time;
 
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });

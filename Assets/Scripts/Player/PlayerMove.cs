@@ -18,7 +18,7 @@ public class PlayerMove : MonoBehaviour
 
     private float lastFireTime = 0f;
 
-    private bool autoGun = false;
+    public bool autoGun = false;
 
     public float lookSensitivity;
     public float cameraRotationLimit;
@@ -94,8 +94,10 @@ public class PlayerMove : MonoBehaviour
         myRigidbody = GetComponent<Rigidbody>();
 
         damage = gameStateManager.playerDamage;
-        hp = gameStateManager.playerHP;
+        Hp = gameStateManager.playerHP;
         def = gameStateManager.playerDef;
+        autoGun = gameStateManager.autoGun;
+        GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
     }
 
     private void FixedUpdate()

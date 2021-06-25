@@ -3472,9 +3472,11 @@ MonoBehaviour:
   gameOverButton:
   - {fileID: 83336190}
   - {fileID: 1625348905}
+  time: 0
   isPlay: 0
   sound: {fileID: 2099486153}
   clip: {fileID: 8300000, guid: ae143492ebcfa344d89463a25ffeb64f, type: 3}
+  stageText: {fileID: 389647086}
 --- !u!4 &217954607
 Transform:
   m_ObjectHideFlags: 0
@@ -10509,7 +10511,7 @@ GameObject:
   - component: {fileID: 389647087}
   - component: {fileID: 389647086}
   m_Layer: 5
-  m_Name: Text
+  m_Name: StageText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10531,8 +10533,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -759, y: 429}
-  m_SizeDelta: {x: 300, y: 150}
+  m_AnchoredPosition: {x: -630, y: 429}
+  m_SizeDelta: {x: 500, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &389647086
 MonoBehaviour:
@@ -10561,13 +10563,13 @@ MonoBehaviour:
     m_BestFit: 0
     m_MinSize: 3
     m_MaxSize: 60
-    m_Alignment: 4
+    m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "1\uC2A4\uD14C\uC774\uC9C0"
+  m_Text: "1 \uC2A4\uD14C\uC774\uC9C0"
 --- !u!222 &389647087
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -11397,6 +11399,7 @@ MonoBehaviour:
   firePosition: {fileID: 922284336}
   range: 50
   damage: 10
+  autoGun: 0
   lookSensitivity: 2
   cameraRotationLimit: 45
   theCamera: {fileID: 963194227}
@@ -20962,6 +20965,55 @@ MonoBehaviour:
   m_Area: 1
   m_IgnoreFromBuild: 0
   m_AffectedAgents: ffffffff
+--- !u!1 &1343199933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1343199935}
+  - component: {fileID: 1343199934}
+  m_Layer: 0
+  m_Name: GameStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1343199934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343199933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 193b25691ea409148a9cbb84abf2007d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerHP: 100
+  playerDef: 0
+  playerDamage: 10
+  stage: 1
+  time: 0
+  autoGun: 0
+--- !u!4 &1343199935
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1343199933}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 30
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1349633986
 GameObject:
   m_ObjectHideFlags: 0
@@ -22886,7 +22938,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &1452317674
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25752,6 +25804,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e45a305476b68144a4c88e3da8273ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mazeSizeX: 11
+  mazeSizeY: 11
   stage: {fileID: 1762308328}
   enablePosition: []
 --- !u!4 &1695238406

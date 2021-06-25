@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         isPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        isWallCheck = Physics.CheckSphere(firePosition.position, 0.01f, whatIsWall);
+        isWallCheck = Physics.CheckSphere(firePosition.position, 0.5f, whatIsWall);
 
         if (!isPlayerInSightRange && !isPlayerInAttackRange) Patrolling();
 
@@ -207,5 +207,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(firePosition.position, 0.5f);
     }
 }

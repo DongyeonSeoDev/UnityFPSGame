@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class MakeMaze : MonoBehaviour
 {
+	public int mazeSizeX = 11;
+	public int mazeSizeY = 11;
+
 	public struct Position
 	{
 		public int x;
 		public int y;
-		public int d;
 
-		public Position(int x, int y, int d)
+		public Position(int x, int y)
         {
 			this.x = x;
 			this.y = y;
-			this.d = d;
         }
 	};
 
@@ -36,8 +37,19 @@ public class MakeMaze : MonoBehaviour
 		new Mtable (1, 0),
 		new Mtable (0, -1),
 		new Mtable (-1, 0),
-		new Mtable (0, 0)
 	};
+
+	Stack<Position> mazeStack = new Stack<Position>();
+	Position currentPosition = new Position(0, 0);
+
+	int dir = 0;
+	int[] dirCheck = { 0, 0, 0, 0 };
+
+	private GameObject[,] stages = new GameObject[11, 11];
+
+	public GameObject stage;
+
+	public List<Vector3> enablePosition = new List<Vector3>();
 
 	int[,] maze = new int[11, 11]
 	{
@@ -54,25 +66,13 @@ public class MakeMaze : MonoBehaviour
 		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 	};
 
-	const int mazeMaxSizeX = 5;
-	const int mazeMaxSizeY = 5;
-
-	int[,] mazeCheck = new int[mazeMaxSizeX, mazeMaxSizeY];
-
-	Stack<Position> mazeStack = new Stack<Position>();
-	Position currentPosition = new Position(0, 0, 0);
-
-	int dir = 0;
-	int[] dirCheck = { 0, 0, 0, 0 };
-
-	private GameObject[,] stages = new GameObject[11, 11];
-
-	public GameObject stage;
-
-	public List<Vector3> enablePosition = new List<Vector3>();
-
 	private void Awake()
     {
+		int mazeCheckSizeX = (mazeSizeX - 1) / 2;
+		int mazeCheckSizeY = (mazeSizeY - 1) / 2;
+
+		int[,] mazeCheck = new int[mazeCheckSizeX, mazeCheckSizeY];
+
 		for (int i = 0; i < stage.transform.childCount; i++)
         {
 			stages[i / 11, i % 11] = stage.transform.GetChild(i).gameObject;
@@ -93,7 +93,7 @@ public class MakeMaze : MonoBehaviour
 					int moveX = Move[dir].x;
 					int moveY = Move[dir].y;
 
-					if (currentPosition.x + moveX >= 0 && currentPosition.x + moveX < mazeMaxSizeX && currentPosition.y + moveY >= 0 && currentPosition.y + moveY < mazeMaxSizeY && mazeCheck[currentPosition.x + moveX, currentPosition.y + moveY] == 0)
+					if (currentPosition.x + moveX >= 0 && currentPosition.x + moveX < mazeCheckSizeX && currentPosition.y + moveY >= 0 && currentPosition.y + moveY < mazeCheckSizeY && mazeCheck[currentPosition.x + moveX, currentPosition.y + moveY] == 0)
 					{
 						maze[currentPosition.x * 2 + 1, currentPosition.y * 2 + 1] = 0;
 						maze[(currentPosition.x * 2 + 1) + moveX * 2, (currentPosition.y * 2 + 1) + moveY * 2] = 0;
