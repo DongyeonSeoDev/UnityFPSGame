@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
 
     private StringBuilder sb = new StringBuilder(8);
 
+    private GameStateManager gameStateManager = null;
+
     public static GameManager Instance
     {
         get
@@ -46,6 +48,9 @@ public class GameManager : MonoBehaviour
     public AudioClip clip;
 
     public Text stageText;
+
+    public GameObject damageTextObject = null;
+    public Transform damageTexts = null;
 
     private void Awake()
     {
@@ -101,10 +106,35 @@ public class GameManager : MonoBehaviour
             Debug.LogError("stageText가 없습니다.");
         }
 
+        if (damageTextObject == null)
+        {
+            Debug.LogError("damageTextObject가 없습니다.");
+        }
+
+        if (damageTexts == null)
+        {
+            Debug.LogError("damageTexts가 없습니다.");
+        }
+
+        gameStateManager = FindObjectOfType<GameStateManager>();
+
+        if (gameStateManager == null)
+        {
+            Debug.LogError("gameStateManager가 없습니다.");
+        }
+
+        PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
+
         gameOverButton[0].onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
             gameOverCanvasGroup.DOKill();
+
+            PoolManager.pool.Clear();
+            PoolManager.prefabDictionary.Clear();
+
+            gameStateManager.Clear();
+
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });
 
@@ -117,11 +147,11 @@ public class GameManager : MonoBehaviour
         isPlay = true;
 
         sb.Remove(0, sb.Length);
-        sb.Append(GameStateManager.Instance.stage);
+        sb.Append(gameStateManager.stage);
         sb.Append(" 스테이지");
 
         stageText.text = sb.ToString();
-        time = GameStateManager.Instance.time;
+        time = gameStateManager.time;
 
         timeText.text = TimeDisplay();
 

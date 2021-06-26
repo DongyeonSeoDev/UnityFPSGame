@@ -11,6 +11,9 @@ public class GameStateManager : MonoBehaviour
     public float time = 0f;
     public bool autoGun = false;
 
+    private int originalPlayerHP;
+    public float originalPlayerDamage;
+
     private static GameStateManager instance = null;
 
     public static GameStateManager Instance
@@ -26,9 +29,6 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    //적 데미지
-    //적 체력
-
     private void Awake()
     {
         if (instance != null)
@@ -43,5 +43,18 @@ public class GameStateManager : MonoBehaviour
         GameStateManager[] obj = FindObjectsOfType<GameStateManager>(); 
         if (obj.Length == 1) DontDestroyOnLoad(gameObject);
         else Destroy(gameObject);
+
+        originalPlayerHP = playerHP;
+        originalPlayerDamage = playerDamage;
+    }
+
+    public void Clear()
+    {
+        playerHP = originalPlayerHP;
+        playerDef = 0;
+        playerDamage = originalPlayerDamage;
+        autoGun = false;
+        stage = 1;
+        time = 0f;
     }
 }

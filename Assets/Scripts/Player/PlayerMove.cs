@@ -201,6 +201,7 @@ public class PlayerMove : MonoBehaviour
                 if (target != null)
                 {
                     target.OnDamage(damage);
+                    PoolManager.GetItem<DamageText>().ShowText(damage.ToString(), hit.transform.position, transform.position);
                 }
             }
 

@@ -78,6 +78,9 @@ public class ClearCheckManager : MonoBehaviour
             Time.timeScale = 1f;
             clearCanvasGroup.DOKill();
 
+            PoolManager.pool.Clear();
+            PoolManager.prefabDictionary.Clear();
+
             gameStateManager.playerHP = playerMove.Hp;
             gameStateManager.playerDef = playerMove.def;
             gameStateManager.playerDamage = playerMove.damage;
