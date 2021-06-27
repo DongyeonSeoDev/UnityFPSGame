@@ -76,7 +76,6 @@ public class ClearCheckManager : MonoBehaviour
         clearButton[1].onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
-            clearCanvasGroup.DOKill();
 
             PoolManager.pool.Clear();
             PoolManager.prefabDictionary.Clear();
@@ -88,6 +87,7 @@ public class ClearCheckManager : MonoBehaviour
             gameStateManager.stage++;
             gameStateManager.time = GameManager.Instance.time;
 
+            DOTween.KillAll();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });
     }

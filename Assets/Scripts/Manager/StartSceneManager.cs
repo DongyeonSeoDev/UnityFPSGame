@@ -53,6 +53,7 @@ public class StartSceneManager : MonoBehaviour
                     audioSource.Play();
                     image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
                     {
+                        DOTween.KillAll();
                         SceneManager.LoadScene("Maze");
                     });
                 });

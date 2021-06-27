@@ -128,13 +128,13 @@ public class GameManager : MonoBehaviour
         gameOverButton[0].onClick.AddListener(() =>
         {
             Time.timeScale = 1f;
-            gameOverCanvasGroup.DOKill();
 
             PoolManager.pool.Clear();
             PoolManager.prefabDictionary.Clear();
 
             gameStateManager.Clear();
 
+            DOTween.KillAll();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         });
 

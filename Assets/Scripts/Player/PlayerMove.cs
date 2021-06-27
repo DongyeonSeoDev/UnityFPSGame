@@ -195,13 +195,30 @@ public class PlayerMove : MonoBehaviour
 
             bool rayCastValue = Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range, whatIsAttackable);
 
+            int randomNumber = Random.Range(0, 10);
+            damage = damage + randomNumber - 5;
+
             if (rayCastValue)
             {
                 IDamageable target = hit.transform.GetComponent<IDamageable>();
                 if (target != null)
                 {
                     target.OnDamage(damage);
-                    PoolManager.GetItem<DamageText>().ShowText(damage.ToString(), hit.transform.position, transform.position);
+
+                    Color color;
+
+                    if (randomNumber <= 2)
+                    {
+                        color = new Color(1f, 1f, 1f, 1f);
+                    }
+                    else
+                    {
+                        color = new Color(1f, 1f * ((float)(10 - randomNumber) / 10), 0f, 1f);
+                    }
+                    
+                    float sizeValue = 0.5f + (0.05f * randomNumber);
+                    Vector3 size = new Vector3(sizeValue, sizeValue, sizeValue);
+                    PoolManager.GetItem<DamageText>().ShowText(damage.ToString(), hit.point, transform.position, size, color);
                 }
             }
 
