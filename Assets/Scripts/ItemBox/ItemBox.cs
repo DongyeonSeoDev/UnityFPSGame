@@ -48,6 +48,8 @@ public class ItemBox : MonoBehaviour, IDamageable
         transform.position = makeMaze.enablePosition[randomNum];
         makeMaze.enablePosition.RemoveAt(randomNum);
         transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
+
+        hp = GameStateManager.Instance.stage * 120;
     }
 
     public void OnDamage(float damage)

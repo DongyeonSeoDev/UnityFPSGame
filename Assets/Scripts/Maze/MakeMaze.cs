@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class MakeMaze : MonoBehaviour
 {
+	public GameObject startPoint = null;
+	public GameObject endPoint = null;
+
+	public Transform endTransform = null;
+	public Vector3 endPosition = Vector2.zero;
+
 	public int mazeSizeX = 11;
 	public int mazeSizeY = 11;
 
@@ -39,43 +45,38 @@ public class MakeMaze : MonoBehaviour
 		new Mtable (-1, 0),
 	};
 
-	Stack<Position> mazeStack = new Stack<Position>();
-	Position currentPosition = new Position(0, 0);
-
-	int dir = 0;
-	int[] dirCheck = { 0, 0, 0, 0 };
-
-	private GameObject[,] stages = new GameObject[11, 11];
-
 	public GameObject stage;
 
 	public List<Vector3> enablePosition = new List<Vector3>();
 
-	int[,] maze = new int[11, 11]
-	{
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-		{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-	};
-
 	private void Awake()
     {
+		GameObject[,] stages = new GameObject[mazeSizeX, mazeSizeY];
+
+		int[,] maze = new int[mazeSizeX, mazeSizeY];
+
+		int dir = 0;
+		int[] dirCheck = { 0, 0, 0, 0 };
+
 		int mazeCheckSizeX = (mazeSizeX - 1) / 2;
 		int mazeCheckSizeY = (mazeSizeY - 1) / 2;
 
 		int[,] mazeCheck = new int[mazeCheckSizeX, mazeCheckSizeY];
 
+		Stack<Position> mazeStack = new Stack<Position>();
+		Position currentPosition = new Position(0, 0);
+
+		for (int i = 0; i < mazeSizeX; i++)
+        {
+			for (int j = 0; j < mazeSizeY; j++)
+            {
+				maze[i, j] = 1;
+            }
+        }
+
 		for (int i = 0; i < stage.transform.childCount; i++)
         {
-			stages[i / 11, i % 11] = stage.transform.GetChild(i).gameObject;
+			stages[i / mazeSizeX, i % mazeSizeY] = stage.transform.GetChild(i).gameObject;
         }
 
 		mazeStack.Push(currentPosition);
@@ -134,9 +135,9 @@ public class MakeMaze : MonoBehaviour
 			}
 		}
 
-		for (int i = 0; i < 11; i++)
+		for (int i = 0; i < mazeSizeX; i++)
         {
-			for (int j = 0; j < 11; j++)
+			for (int j = 0; j < mazeSizeY; j++)
             {
 				if (maze[i, j] == 0)
                 {
@@ -146,7 +147,9 @@ public class MakeMaze : MonoBehaviour
             }
         }
 
-		stage.transform.GetChild(11).gameObject.SetActive(false);
-		stage.transform.GetChild(109).gameObject.SetActive(false);
+		startPoint.gameObject.SetActive(false);
+		endPoint.gameObject.SetActive(false);
+
+		endTransform.position = endPosition;
 	}
 }

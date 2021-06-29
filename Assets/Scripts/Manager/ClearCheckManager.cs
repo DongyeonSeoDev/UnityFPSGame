@@ -88,7 +88,15 @@ public class ClearCheckManager : MonoBehaviour
             gameStateManager.time = GameManager.Instance.time;
 
             DOTween.KillAll();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+            if (Random.Range(0, 2) == 0)
+            {
+                SceneManager.LoadScene("Maze");
+            }
+            else
+            {
+                SceneManager.LoadScene("Maze2");
+            }
         });
     }
 

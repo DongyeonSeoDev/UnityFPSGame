@@ -49,6 +49,9 @@ public class Enemy : MonoBehaviour, IDamageable
         playerMove = FindObjectOfType<PlayerMove>();
         playerTransform = playerMove.gameObject.transform;
         audioSource = GetComponent<AudioSource>();
+
+        hp = GameStateManager.Instance.stage * 100;
+        attack = GameStateManager.Instance.stage * 7;
     }
 
     private void Update()

@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
             gameStateManager.Clear();
 
             DOTween.KillAll();
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("Maze");
         });
 
         gameOverButton[1].onClick.AddListener(() =>

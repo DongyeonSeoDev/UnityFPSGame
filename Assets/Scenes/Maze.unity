@@ -3129,7 +3129,7 @@ MonoBehaviour:
   itemCategory: 2
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!1 &213858015
 GameObject:
   m_ObjectHideFlags: 0
@@ -3519,7 +3519,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 229762785}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 39.96, y: 1.21, z: 62.921894}
+  m_LocalPosition: {x: -0.040000916, y: 1.21, z: 2.921894}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 534730448}
@@ -3557,6 +3557,8 @@ MonoBehaviour:
   - {fileID: 77011103}
   sound: {fileID: 2099486153}
   clip: {fileID: 8300000, guid: 8f14c9f162be18344b908f4a8d56bc93, type: 3}
+  minMaze2Stage: 5
+  minMaze3Stage: 10
 --- !u!1 &233613471
 GameObject:
   m_ObjectHideFlags: 0
@@ -4711,8 +4713,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 311644718}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 40, y: 1.5, z: 65.5}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 1.5, z: 5.5}
   m_LocalScale: {x: 10, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 534730448}
@@ -4804,7 +4806,7 @@ MonoBehaviour:
   itemCategory: 1
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!65 &317648567
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -12274,7 +12276,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534730447}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 40, y: 0, z: 60}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1530627755}
@@ -15838,7 +15840,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924636200}
   m_LocalRotation: {x: -0, y: 0.7102983, z: -0, w: -0.7039008}
-  m_LocalPosition: {x: 45.454742, y: 1.5, z: 60.00432}
+  m_LocalPosition: {x: 5.4547424, y: 1.5, z: 0.0043182373}
   m_LocalScale: {x: 10, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 534730448}
@@ -16760,8 +16762,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 978543300}
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 34.5, y: 1.5, z: 60}
+  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -5.5, y: 1.5, z: 0}
   m_LocalScale: {x: 10, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 534730448}
@@ -16853,7 +16855,7 @@ MonoBehaviour:
   itemCategory: 0
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!65 &986809166
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17328,7 +17330,7 @@ MonoBehaviour:
   itemCategory: 0
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!65 &1025635379
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23349,7 +23351,7 @@ MonoBehaviour:
   itemCategory: 1
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!65 &1481352053
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -23400,7 +23402,7 @@ MonoBehaviour:
   itemCategory: 2
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!1 &1519938518
 GameObject:
   m_ObjectHideFlags: 0
@@ -23652,8 +23654,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1530627754}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40, y: -1.110223e-16, z: 60}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 534730448}
@@ -24770,7 +24772,7 @@ MonoBehaviour:
   itemCategory: 2
   atkUpValue: 10
   defUpValue: 3
-  hpUpValue: 20
+  hpUpValue: 50
 --- !u!65 &1629177794
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -25787,6 +25789,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e45a305476b68144a4c88e3da8273ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startPoint: {fileID: 1519938518}
+  endPoint: {fileID: 1472122929}
+  endTransform: {fileID: 534730448}
+  endPosition: {x: 40, y: 0, z: 60}
   mazeSizeX: 11
   mazeSizeY: 11
   stage: {fileID: 1762308328}
