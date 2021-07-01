@@ -1238,8 +1238,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerHP: 100
   playerDef: 0
+  bulletCount: 0
   playerDamage: 10
-  stage: 1
+  time: 0
+  autoGun: 0
+  mazeMode: 0
+  mazeSize: 0
 --- !u!4 &1167820575
 Transform:
   m_ObjectHideFlags: 0

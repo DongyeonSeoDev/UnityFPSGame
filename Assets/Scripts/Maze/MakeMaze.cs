@@ -147,9 +147,13 @@ public class MakeMaze : MonoBehaviour
             }
         }
 
-		startPoint.gameObject.SetActive(false);
-		endPoint.gameObject.SetActive(false);
-
 		endTransform.position = endPosition;
+
+		startPoint.gameObject.SetActive(false);
+		
+		if (GameStateManager.Instance.mazeMode != eMazeMode.ALLKILLENEMY)
+        {
+			endPoint.gameObject.SetActive(false);
+		}
 	}
 }

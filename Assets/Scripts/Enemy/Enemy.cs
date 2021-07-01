@@ -42,6 +42,8 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private AudioSource audioSource = null;
 
+    private bool isAllKillEnemyMode = false;
+
     private void Awake()
     {
         transform.localPosition = RandomPosition();
@@ -50,15 +52,20 @@ public class Enemy : MonoBehaviour, IDamageable
         playerTransform = playerMove.gameObject.transform;
         audioSource = GetComponent<AudioSource>();
 
-        hp = GameStateManager.Instance.stage * 100;
-        attack = GameStateManager.Instance.stage * 7;
+        hp = GameStateManager.Instance.Stage * 100 - 50;
+        attack = GameStateManager.Instance.Stage * 7;
+
+        if (GameStateManager.Instance.mazeMode == eMazeMode.ALLKILLENEMY)
+        {
+            isAllKillEnemyMode = true;
+        }
     }
 
     private void Update()
     {
         isPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
         isPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        isWallCheck = Physics.CheckSphere(firePosition.position, 0.5f, whatIsWall);
+        isWallCheck = Physics.CheckSphere(firePosition.position, 1f, whatIsWall);
 
         if (!isPlayerInSightRange && !isPlayerInAttackRange) Patrolling();
 
@@ -174,7 +181,15 @@ public class Enemy : MonoBehaviour, IDamageable
         if (hp <= 0)
         {
             Die();
-            Invoke("Spawn", 5f);
+
+            if (!isAllKillEnemyMode)
+            {
+                Invoke("Spawn", 5f);
+            }
+            else
+            {
+                GameManager.Instance.EnemyKillCount++;
+            }
         }
     }
 
@@ -185,7 +200,7 @@ public class Enemy : MonoBehaviour, IDamageable
 
     private void Spawn()
     {
-        hp = 100;
+        hp = GameStateManager.Instance.Stage * 100 - 50;
         transform.localPosition = RandomPosition();
         gameObject.SetActive(true);
     }
@@ -212,6 +227,6 @@ public class Enemy : MonoBehaviour, IDamageable
         Gizmos.DrawWireSphere(transform.position, attackRange);
 
         Gizmos.color = Color.magenta;
-        Gizmos.DrawSphere(firePosition.position, 0.5f);
+        Gizmos.DrawSphere(firePosition.position, 1f);
     }
 }

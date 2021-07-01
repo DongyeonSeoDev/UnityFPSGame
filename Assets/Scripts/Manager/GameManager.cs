@@ -29,6 +29,16 @@ public class GameManager : MonoBehaviour
 
     private GameStateManager gameStateManager = null;
 
+    private PlayerMove playerMove = null;
+
+    public GameObject enemys = null;
+    public GameObject traps = null;
+
+    private bool isSpeedMode = false;
+
+    public float limitTime = 30f;
+    private float startTime = 0f;
+
     public static GameManager Instance
     {
         get
@@ -51,6 +61,28 @@ public class GameManager : MonoBehaviour
 
     public GameObject damageTextObject = null;
     public Transform damageTexts = null;
+
+    private int enemyKillCount = 0;
+    private int enemyCount = 0;
+
+    private ClearCheckManager clearCheckManager = null;
+
+    public int EnemyKillCount
+    {
+        get { return enemyKillCount; }
+        set
+        {
+            if (gameStateManager.mazeMode == eMazeMode.ALLKILLENEMY)
+            {
+                enemyKillCount = value;
+
+                if (enemyKillCount >= enemyCount)
+                {
+                    clearCheckManager.Clear();
+                }
+            }
+        }
+    }
 
     private void Awake()
     {
@@ -123,6 +155,30 @@ public class GameManager : MonoBehaviour
             Debug.LogError("gameStateManager가 없습니다.");
         }
 
+        playerMove = FindObjectOfType<PlayerMove>();
+
+        if (playerMove == null)
+        {
+            Debug.LogError("playerMove가 없습니다.");
+        }
+
+        if (enemys == null)
+        {
+            Debug.LogError("enemys가 없습니다.");
+        }
+
+        if (traps == null)
+        {
+            Debug.LogError("traps가 없습니다.");
+        }
+
+        clearCheckManager = FindObjectOfType<ClearCheckManager>();
+
+        if (clearCheckManager == null)
+        {
+            Debug.LogError("clearCheckManager가 없습니다.");
+        }
+
         PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
 
         gameOverButton[0].onClick.AddListener(() =>
@@ -131,8 +187,6 @@ public class GameManager : MonoBehaviour
 
             PoolManager.pool.Clear();
             PoolManager.prefabDictionary.Clear();
-
-            gameStateManager.Clear();
 
             DOTween.KillAll();
             SceneManager.LoadScene("Maze");
@@ -147,13 +201,23 @@ public class GameManager : MonoBehaviour
         isPlay = true;
 
         sb.Remove(0, sb.Length);
-        sb.Append(gameStateManager.stage);
+        sb.Append(gameStateManager.Stage);
         sb.Append(" 스테이지");
 
         stageText.text = sb.ToString();
         time = gameStateManager.time;
-
         timeText.text = TimeDisplay();
+
+        if (gameStateManager.mazeMode == eMazeMode.SPEED)
+        {
+            traps.SetActive(false);
+            enemys.SetActive(false);
+
+            isSpeedMode = true;
+            startTime = time;
+        }
+
+        enemyCount = enemys.transform.childCount;
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -166,6 +230,14 @@ public class GameManager : MonoBehaviour
         time += Time.deltaTime;
 
         timeText.text = TimeDisplay();
+
+        if (isSpeedMode)
+        {
+            if (startTime + limitTime <= time)
+            {
+                playerMove.GameOver();
+            }
+        }
     }
 
     private string timeCheck(int time)
@@ -180,6 +252,9 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        gameStateManager.DataClear();
+        gameStateManager.Save();
+
         isPlay = false;
         gameOverTimeText.text = "Time: " + TimeDisplay();
 

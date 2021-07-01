@@ -54,7 +54,15 @@ public class StartSceneManager : MonoBehaviour
                     image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
                     {
                         DOTween.KillAll();
-                        SceneManager.LoadScene("Maze");
+
+                        if (GameStateManager.Instance.mazeSize == eMazeSize.NORMAL)
+                        {
+                            SceneManager.LoadScene("Maze");
+                        }
+                        else
+                        {
+                            SceneManager.LoadScene("Maze2");
+                        }
                     });
                 });
             }

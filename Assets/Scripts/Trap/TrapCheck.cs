@@ -20,7 +20,7 @@ public class TrapCheck : MonoBehaviour
             Debug.LogError("playerMove를 찾을 수 없습니다.");
         }
 
-        attackDamage = attackDamage * GameStateManager.Instance.stage;
+        attackDamage = attackDamage * GameStateManager.Instance.Stage;
     }
 
     private void OnTriggerEnter(Collider other)

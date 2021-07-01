@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class PlayerMove : MonoBehaviour
 {
     public float speed = 10f;
-    public float fireDelay = 0.2f;
+    public float fireDelay = 0.5f;
+    public float continuousFireDelay = 0.2f;
 
     public GameObject firePosition;
     public float range = 50f;
     public float damage = 10f;
 
-    private AudioSource audioSource;
     private Rigidbody myRigidbody;
 
     private float lastFireTime = 0f;
@@ -29,6 +30,9 @@ public class PlayerMove : MonoBehaviour
 
     [Header("Audio clips")]
     public AudioClip fireSound;
+    public AudioClip switchGunSound;
+    public AudioClip reloadSound1;
+    public AudioClip reloadSound2;
 
     public GameObject damagePanel;
 
@@ -46,7 +50,20 @@ public class PlayerMove : MonoBehaviour
     public int def = 0;
     private bool isCollision = false;
 
-    public LayerMask whatIsAttackable;
+    private bool isGameOver = false;
+    private bool isAttackable = true;
+
+    public GameObject soundObject = null;
+
+    public int currentBulletCount = 30;
+    private int maxBulletCount = 30;
+
+    public float reloadDelay = 3.0f;
+
+    private bool isReload = false;
+
+    private GunAnimation gunAnimation = null;
+    private GameStateManager gameStateManager = null;
 
     public int Hp 
     {
@@ -79,8 +96,6 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    GameStateManager gameStateManager = null;
-
     private void Awake()
     {
         gameStateManager = GameStateManager.Instance;
@@ -90,14 +105,30 @@ public class PlayerMove : MonoBehaviour
             Debug.LogError("gameStateManager가 없습니다.");
         }
 
-        audioSource = GetComponent<AudioSource>();
+        gunAnimation = FindObjectOfType<GunAnimation>();
+
+        if (gunAnimation == null)
+        {
+            Debug.LogError("gunAnimation이 없습니다.");
+        }
+
         myRigidbody = GetComponent<Rigidbody>();
 
         damage = gameStateManager.playerDamage;
         Hp = gameStateManager.playerHP;
+        currentBulletCount = gameStateManager.bulletCount;
         def = gameStateManager.playerDef;
         autoGun = gameStateManager.autoGun;
         GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
+
+        if (soundObject == null)
+        {
+            Debug.LogError("soundObject가 없습니다.");
+        }
+        else
+        {
+            PoolManager.CreatePool<Sound>(soundObject, transform, 10);
+        }
     }
 
     private void FixedUpdate()
@@ -112,23 +143,41 @@ public class PlayerMove : MonoBehaviour
         CameraRotation();
         CharacterRotation();
 
-        if (Input.GetButton("Fire1") && autoGun == true)
-        {
-            Fire(damage);
-        }
-        else if (Input.GetButtonDown("Fire1") && autoGun == false)
-        {
-            Fire(damage * 1.5f);
-        }
-        else if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            autoGun = !autoGun;
-            GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
-        }
-        if(transform.position.y <= -50f)
+        if (transform.position.y <= -50f)
         {
             GameOver();
         }
+
+        if (!isAttackable || isReload) return;
+
+        if (Input.GetButton("Fire1") && autoGun == true)
+        {
+            Fire(damage, continuousFireDelay);
+        }
+        else if (Input.GetButtonDown("Fire1"))
+        {
+            Fire(damage * 2f, fireDelay);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            autoGun = !autoGun;
+            GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
+
+            isAttackable = false;
+            PoolManager.GetItem<Sound>().soundPlay(switchGunSound, 1f, 2f);
+            Invoke("switchGunModeChange", 0.5f);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reload();
+        }
+    }
+
+    private void switchGunModeChange()
+    {
+        isAttackable = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -158,17 +207,20 @@ public class PlayerMove : MonoBehaviour
             return;
         }
 
+        if (velocity == Vector3.zero) gunAnimation.MoveEnd();
+        else gunAnimation.MoveStart();
+
         myRigidbody.MovePosition(transform.position + velocity);
     }
 
-    private void CameraRotation()
+    public void CameraRotation(float xRotation = 0)
     {
-        float xRotation = Input.GetAxis("Mouse Y");
+        xRotation = xRotation == 0 ? Input.GetAxis("Mouse Y") : xRotation;
         float cameraRotationX = xRotation * lookSensitivity;
 
         if (isCollision)
         {
-            cameraRotationX *= 0.01f;
+            return;
         }
         
         currentCameraRotationX -= cameraRotationX;
@@ -183,22 +235,22 @@ public class PlayerMove : MonoBehaviour
         transform.Rotate(transform.rotation.normalized * characterRotationY);
     }
 
-    private void Fire(float damage)
+    private void Fire(float damage, float delay)
     {
-        if (Time.time - lastFireTime > fireDelay)
+        if (currentBulletCount <= 0) return;
+
+        if (Time.time - lastFireTime > delay)
         {
-            audioSource.clip = fireSound;
-            audioSource.Play();
+            PoolManager.GetItem<Sound>().soundPlay(fireSound, 0.5f, 2f);
+            
             lastFireTime = Time.time;
 
             RaycastHit hit;
 
-            bool rayCastValue = Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range, whatIsAttackable);
-
             int randomNumber = Random.Range(0, 10);
             damage = damage + randomNumber - 5;
 
-            if (rayCastValue)
+            if (Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range))
             {
                 IDamageable target = hit.transform.GetComponent<IDamageable>();
                 if (target != null)
@@ -223,7 +275,41 @@ public class PlayerMove : MonoBehaviour
             }
 
             particle.Play();
+            currentBulletCount--;
+
+            if (autoGun)
+            {
+                gunAnimation.ContinuousFireStart();
+            }
+            else
+            {
+                gunAnimation.FireStart();
+            }
         }
+    }
+
+    private void Reload()
+    {
+        if (isReload) return;
+
+        currentBulletCount = maxBulletCount;
+        isReload = true;
+
+        PoolManager.GetItem<Sound>().soundPlay(reloadSound1, 1f, 1f);
+
+        Invoke("ReloadSound2Play", 1.3f);
+        Invoke("EndReload", reloadDelay);
+        gunAnimation.ReloadStart();
+    }
+
+    private void ReloadSound2Play()
+    {
+        PoolManager.GetItem<Sound>().soundPlay(reloadSound2, 1f, 1f);
+    }
+
+    private void EndReload()
+    {
+        isReload = false;
     }
 
     public void Damage(int damage)
@@ -241,8 +327,13 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-    private void GameOver()
+    public void GameOver()
     {
+        if (isGameOver) return;
+
+        isGameOver = true;
+
+        gunAnimation.AnimationEnd();
         GameManager.Instance.GameOver();
         gun.SetActive(false);
     }

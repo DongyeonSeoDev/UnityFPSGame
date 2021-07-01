@@ -1,18 +1,79 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using UnityEngine;
+
+public enum eMazeMode
+{
+    NORMAL, SPEED, ALLKILLENEMY
+}
+
+public enum eMazeSize
+{
+    NORMAL, LARGE
+}
+
+public class SaveData
+{
+    public int playerHP;
+    public int playerDef;
+    public int bulletCount;
+    public float playerDamage;
+    public float time;
+    public bool autoGun;
+    public int stage;
+    public int highScoreStage;
+
+    public eMazeMode mazeMode = eMazeMode.NORMAL;
+    public eMazeSize mazeSize = eMazeSize.NORMAL;
+
+    public SaveData(int playerHP, int playerDef, int bulletCount, float playerDamage, float time, bool autoGun, int stage, int highScoreStage, eMazeMode mazeMode, eMazeSize mazeSize)
+    {
+        this.playerHP = playerHP;
+        this.playerDef = playerDef;
+        this.bulletCount = bulletCount;
+        this.playerDamage = playerDamage;
+        this.time = time;
+        this.autoGun = autoGun;
+        this.stage = stage;
+        this.highScoreStage = highScoreStage;
+        this.mazeMode = mazeMode;
+        this.mazeSize = mazeSize;
+    }
+}
 
 public class GameStateManager : MonoBehaviour
 {
-    public int playerHP = 100;
-    public int playerDef = 0;
-    public float playerDamage = 10f;
-    public int stage = 1;
-    public float time = 0f;
-    public bool autoGun = false;
+    public int playerHP;
+    public int playerDef;
+    public int bulletCount;
+    public float playerDamage;
+    public float time;
+    public bool autoGun;
 
-    private int originalPlayerHP;
-    public float originalPlayerDamage;
+    public eMazeMode mazeMode;
+    public eMazeSize mazeSize;
+
+    private int stage;
+    private int highScoreStage;
+
+    private string filePath;
+
+    public int Stage
+    {
+        get { return stage; }
+        set
+        {
+            stage = value;
+
+            if (stage > highScoreStage)
+            {
+                highScoreStage = stage;
+            }
+        }
+    }
 
     private static GameStateManager instance = null;
 
@@ -44,17 +105,57 @@ public class GameStateManager : MonoBehaviour
         if (obj.Length == 1) DontDestroyOnLoad(gameObject);
         else Destroy(gameObject);
 
-        originalPlayerHP = playerHP;
-        originalPlayerDamage = playerDamage;
+        filePath = string.Concat(Application.persistentDataPath, "/", "Save");
+
+        Load();
     }
 
-    public void Clear()
+    public void DataClear()
     {
-        playerHP = originalPlayerHP;
+        playerHP = 100;
         playerDef = 0;
-        playerDamage = originalPlayerDamage;
+        bulletCount = 30;
+        playerDamage = 10;
         autoGun = false;
         stage = 1;
         time = 0f;
+        mazeMode = eMazeMode.NORMAL;
+        mazeSize = eMazeSize.NORMAL;
+    }
+
+    public void Save()
+    {
+        SaveData saveData = new SaveData(playerHP, playerDef, bulletCount, playerDamage, time, autoGun, stage, highScoreStage, mazeMode, mazeSize);
+        string savedJson = JsonUtility.ToJson(saveData);
+        byte[] bytes = Encoding.UTF8.GetBytes(savedJson);
+        string code = Convert.ToBase64String(bytes);
+        File.WriteAllText(filePath, code);
+    }
+
+    public void Load()
+    {
+        if (File.Exists(filePath))
+        {
+            string code = File.ReadAllText(filePath);
+            byte[] bytes = Convert.FromBase64String(code);
+            string savedJson = Encoding.UTF8.GetString(bytes);
+            SaveData saveData = JsonUtility.FromJson<SaveData>(savedJson);
+
+            playerHP = saveData.playerHP;
+            playerDef = saveData.playerDef;
+            bulletCount = saveData.bulletCount;
+            playerDamage = saveData.playerDamage;
+            time = saveData.time;
+            autoGun = saveData.autoGun;
+            mazeMode = saveData.mazeMode;
+            mazeSize = saveData.mazeSize;
+            stage = saveData.stage;
+            highScoreStage = saveData.highScoreStage;
+        }
+        else
+        {
+            highScoreStage = 1;
+            DataClear();
+        }
     }
 }
