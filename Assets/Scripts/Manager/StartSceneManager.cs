@@ -9,27 +9,16 @@ using DG.Tweening;
 public class StartSceneManager : MonoBehaviour
 {
     [SerializeField] private Button startButton;
+    [SerializeField] private Button keyButton;
+    [SerializeField] private Button exitButton;
+
+    [SerializeField] private GameObject keyPanel;
+    [SerializeField] private GameObject gun;
     [SerializeField] private Image image;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip sound;
 
-    private void Awake()
-    {
-        if (startButton == null)
-        {
-            Debug.LogError("startButton이 없습니다.");
-        }
-
-        if (audioSource == null)
-        {
-            Debug.LogError("audioSource가 없습니다.");
-        }
-
-        if (sound == null)
-        {
-            Debug.LogError("sound가 없습니다.");
-        }
-    }
+    private bool isButtonClick = false;
 
     private void Start()
     {
@@ -38,34 +27,49 @@ public class StartSceneManager : MonoBehaviour
             Debug.Log("spriteRenderer가 없습니다.");
         }
 
+        startButton.onClick.AddListener(() =>
+        {
+            if (isButtonClick) return;
+
+            audioSource.clip = sound;
+            audioSource.Play();
+            image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
+            {
+                DOTween.KillAll();
+
+                if (GameStateManager.Instance.mazeSize == eMazeSize.NORMAL)
+                {
+                    SceneManager.LoadScene("Maze");
+                }
+                else
+                {
+                    SceneManager.LoadScene("Maze2");
+                }
+            });
+
+            isButtonClick = true;
+        });
+
+        keyButton.onClick.AddListener(() =>
+        {
+            keyPanel.SetActive(true);
+            gun.SetActive(false);
+        });
+
+        exitButton.onClick.AddListener(() =>
+        {
+            keyPanel.SetActive(false);
+            gun.SetActive(true);
+        });
+
         Invoke("soundPlay", 0.5f);
 
         image.DOColor(new Color(0, 0, 0, 0), 2f).OnComplete(() =>
         {
-            if (startButton != null)
-            {
-                startButton.gameObject.SetActive(true);
-                startButton.image.DOColor(new Color(0.8f, 0.8f, 0.8f, 1f), 1f);
-
-                startButton.onClick.AddListener(() =>
-                {
-                    audioSource.clip = sound;
-                    audioSource.Play();
-                    image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
-                    {
-                        DOTween.KillAll();
-
-                        if (GameStateManager.Instance.mazeSize == eMazeSize.NORMAL)
-                        {
-                            SceneManager.LoadScene("Maze");
-                        }
-                        else
-                        {
-                            SceneManager.LoadScene("Maze2");
-                        }
-                    });
-                });
-            }
+            startButton.gameObject.SetActive(true);
+            keyButton.gameObject.SetActive(true);
+            startButton.transform.DOScale(Vector3.one, 1f);
+            keyButton.transform.DOScale(Vector3.one, 1f);
         });
     }
 

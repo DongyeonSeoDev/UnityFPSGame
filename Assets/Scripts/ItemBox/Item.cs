@@ -38,12 +38,17 @@ public class Item : MonoBehaviour
             {
                 case ItemEnum.ATKUP:
                     playerMove.damage += atkUpValue;
+                    GameManager.Instance.AttackTextUI((int)playerMove.damage);
+                    PoolManager.GetItem<ItemText>().ShowText("공격력 업", Color.green);
                     break;
                 case ItemEnum.DEFUP:
                     playerMove.def += defUpValue;
+                    GameManager.Instance.DefTextUI(playerMove.def);
+                    PoolManager.GetItem<ItemText>().ShowText("방어력 업", Color.cyan);
                     break;
                 case ItemEnum.HPUP:
                     playerMove.Hp += hpUpValue;
+                    PoolManager.GetItem<ItemText>().ShowText("체력 회복", Color.red);
                     break;
             }
 

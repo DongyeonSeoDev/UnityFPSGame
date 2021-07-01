@@ -7,12 +7,15 @@ using UnityEngine;
 
 public enum eMazeMode
 {
-    NORMAL, SPEED, ALLKILLENEMY
+    NORMAL = 0, 
+    SPEED = 1, 
+    ALLKILLENEMY = 2
 }
 
 public enum eMazeSize
 {
-    NORMAL, LARGE
+    NORMAL = 0, 
+    LARGE = 1
 }
 
 public class SaveData
@@ -57,7 +60,7 @@ public class GameStateManager : MonoBehaviour
     public eMazeSize mazeSize;
 
     private int stage;
-    private int highScoreStage;
+    public int highScoreStage;
 
     private string filePath;
 

@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
     public float limitTime = 30f;
     private float startTime = 0f;
 
+    public Text bulletUI = null;
+    public Image bulletImage = null;
+    public Text attackText = null;
+    public Text defText = null;
+
     public static GameManager Instance
     {
         get
@@ -58,14 +63,22 @@ public class GameManager : MonoBehaviour
     public AudioClip clip;
 
     public Text stageText;
+    public Text mazeStateText;
+    public Image mazeState;
+    public string[] mazeStateTexts;
 
     public GameObject damageTextObject = null;
     public Transform damageTexts = null;
+    public GameObject itemText = null;
+    public Transform itemTexts = null;
 
     private int enemyKillCount = 0;
     private int enemyCount = 0;
 
     private ClearCheckManager clearCheckManager = null;
+
+    public Text mazeModeText = null;
+    public Text mazeModeValue = null;
 
     public int EnemyKillCount
     {
@@ -75,6 +88,7 @@ public class GameManager : MonoBehaviour
             if (gameStateManager.mazeMode == eMazeMode.ALLKILLENEMY)
             {
                 enemyKillCount = value;
+                ShowMazeEnemy(enemyCount - enemyKillCount);
 
                 if (enemyKillCount >= enemyCount)
                 {
@@ -179,7 +193,43 @@ public class GameManager : MonoBehaviour
             Debug.LogError("clearCheckManager가 없습니다.");
         }
 
+        if (bulletUI == null)
+        {
+            Debug.LogError("bulletUI가 없습니다.");
+        }
+
+        if (bulletImage == null)
+        {
+            Debug.LogError("bulletImage가 없습니다.");
+        }
+
+        if (attackText == null)
+        {
+            Debug.LogError("attackText가 없습니다.");
+        }
+
+        if (defText == null)
+        {
+            Debug.LogError("defText가 없습니다.");
+        }
+
+        if (itemText == null)
+        {
+            Debug.LogError("itemtext가 없습니다.");
+        }
+
+        if (itemTexts == null)
+        {
+            Debug.LogError("itemTexts가 없습니다.");
+        }
+
+        if (mazeState == null)
+        {
+            Debug.LogError("mazeState가 없습니다.");
+        }
+
         PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
+        PoolManager.CreatePool<ItemText>(itemText, itemTexts, 5);
 
         gameOverButton[0].onClick.AddListener(() =>
         {
@@ -221,6 +271,27 @@ public class GameManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        ShowMazeState();
+
+        if (gameStateManager.mazeMode == eMazeMode.SPEED)
+        {
+            mazeModeText.text = "남은 시간";
+        }
+        else if (gameStateManager.mazeMode == eMazeMode.ALLKILLENEMY)
+        {
+            mazeModeText.text = "남은 적";
+            ShowMazeEnemy(enemyCount - enemyKillCount);
+        }
+        else
+        {
+            mazeModeText.text = "탈출하세요!";
+            sb.Remove(0, sb.Length);
+            sb.Append("최고기록: ");
+            sb.Append(gameStateManager.highScoreStage);
+            sb.Append("스테이지");
+            mazeModeValue.text = sb.ToString();
+        }
     }
 
     private void Update()
@@ -233,6 +304,8 @@ public class GameManager : MonoBehaviour
 
         if (isSpeedMode)
         {
+            ShowMazeTime();
+
             if (startTime + limitTime <= time)
             {
                 playerMove.GameOver();
@@ -274,8 +347,10 @@ public class GameManager : MonoBehaviour
         });
     }
 
-    public string TimeDisplay()
+    public string TimeDisplay(float time = 0)
     {
+        time = time == 0 ? this.time : time;
+
         int minute = (int)time / 60;
         int second = (int)time - minute * 60;
         int millisecond = (int)((time - (minute * 60 + second)) * 100);
@@ -293,5 +368,61 @@ public class GameManager : MonoBehaviour
     public void GunModeUIChange(int textNumber)
     {
         gunStateText.text = gunStateTexts[textNumber];
+    }
+
+    public void BulletCountUI(int bulletCount)
+    {
+        sb.Remove(0, sb.Length);
+        sb.Append("총알: ");
+        sb.Append(bulletCount);
+        sb.Append("/30");
+
+        bulletUI.text = sb.ToString();
+
+        bulletImage.fillAmount = (float)bulletCount / 30;
+    }
+
+    public void AttackTextUI(int attack)
+    {
+        sb.Remove(0, sb.Length);
+        sb.Append("공격력: ");
+        sb.Append(attack);
+
+        attackText.text = sb.ToString();
+    }
+
+    public void DefTextUI(int def)
+    {
+        sb.Remove(0, sb.Length);
+        sb.Append("방어력: ");
+        sb.Append(def);
+
+        defText.text = sb.ToString();
+    }
+
+    private void ShowMazeState()
+    {
+        mazeStateText.text = mazeStateTexts[(int)gameStateManager.mazeMode];
+
+        if (gameStateManager.mazeSize == eMazeSize.LARGE)
+        {
+            mazeStateText.text += " (대형 미로)";
+        }
+
+        mazeStateText.DOColor(new Color(1f, 1f, 1f, 0f), 2f).SetDelay(1f);
+        mazeState.DOColor(new Color(1f, 1f, 1f, 0f), 2f).SetDelay(1f).OnComplete(() => {
+            mazeState.gameObject.SetActive(false);
+            mazeStateText.gameObject.SetActive(false);
+        });
+    }
+
+    private void ShowMazeTime()
+    {
+        mazeModeValue.text = TimeDisplay(startTime + limitTime - time);
+    }
+
+    private void ShowMazeEnemy(int value)
+    {
+        mazeModeValue.text = value.ToString();
     }
 }

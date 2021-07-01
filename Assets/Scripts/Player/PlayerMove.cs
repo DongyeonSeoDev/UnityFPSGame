@@ -42,7 +42,6 @@ public class PlayerMove : MonoBehaviour
     public Text hpText;
     public Image hpBar;
 
-    public Text gameOverScoreText;
     public ParticleSystem particle;
     public GameObject gun;
     private StringBuilder sb = new StringBuilder(11);
@@ -120,6 +119,10 @@ public class PlayerMove : MonoBehaviour
         def = gameStateManager.playerDef;
         autoGun = gameStateManager.autoGun;
         GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
+
+        GameManager.Instance.BulletCountUI(currentBulletCount);
+        GameManager.Instance.AttackTextUI((int)damage);
+        GameManager.Instance.DefTextUI(def);
 
         if (soundObject == null)
         {
@@ -276,6 +279,7 @@ public class PlayerMove : MonoBehaviour
 
             particle.Play();
             currentBulletCount--;
+            GameManager.Instance.BulletCountUI(currentBulletCount);
 
             if (autoGun)
             {
@@ -310,6 +314,8 @@ public class PlayerMove : MonoBehaviour
     private void EndReload()
     {
         isReload = false;
+
+        GameManager.Instance.BulletCountUI(currentBulletCount);
     }
 
     public void Damage(int damage)
