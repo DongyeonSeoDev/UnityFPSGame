@@ -176,6 +176,11 @@ public class PlayerMove : MonoBehaviour
         {
             Reload();
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameManager.Instance.Pause();
+        }
     }
 
     private void switchGunModeChange()

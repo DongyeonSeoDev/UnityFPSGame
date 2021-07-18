@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 
-
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
@@ -43,6 +42,12 @@ public class GameManager : MonoBehaviour
     public Image bulletImage = null;
     public Text attackText = null;
     public Text defText = null;
+
+    public CanvasGroup pause = null;
+    public Button continueButton = null;
+    public Button retryButton = null;
+    public Button exitButton = null;
+    public bool isPause = false;
 
     public static GameManager Instance
     {
@@ -226,6 +231,51 @@ public class GameManager : MonoBehaviour
         if (mazeState == null)
         {
             Debug.LogError("mazeState가 없습니다.");
+        }
+
+        if (continueButton == null)
+        {
+            Debug.LogError("continueButton이 없습니다.");
+        }
+        else
+        {
+            continueButton.onClick.AddListener(() =>
+            {
+                Pause();
+            });
+        }
+
+        if (retryButton == null)
+        {
+            Debug.LogError("retryButton이 없습니다.");
+        }
+        else
+        {
+            retryButton.onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
+
+                gameStateManager.DataClear();
+                gameStateManager.Save();
+
+                PoolManager.pool.Clear();
+                PoolManager.prefabDictionary.Clear();
+
+                DOTween.KillAll();
+                SceneManager.LoadScene("Maze");
+            });
+        }
+
+        if (exitButton == null)
+        {
+            Debug.LogError("exitButton이 없습니다.");
+        }
+        else
+        {
+            exitButton.onClick.AddListener(() =>
+            {
+                Application.Quit();
+            });
         }
 
         PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
@@ -424,5 +474,39 @@ public class GameManager : MonoBehaviour
     private void ShowMazeEnemy(int value)
     {
         mazeModeValue.text = value.ToString();
+    }
+
+    public void Pause()
+    {
+        if (pause.alpha == 1 && isPause == true)
+        {
+            Time.timeScale = 1f;
+
+            pause.DOFade(0f, 0.5f).OnComplete(() =>
+            {
+                pause.interactable = false;
+                pause.blocksRaycasts = false;
+
+                isPause = false;
+                
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+            });
+        }
+        else if (pause.alpha == 0 && isPause == false)
+        {
+            pause.DOFade(1f, 0.5f).OnComplete(() =>
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.Confined;
+
+                pause.interactable = true;
+                pause.blocksRaycasts = true;
+
+                isPause = true;
+
+                Time.timeScale = 0f;
+            });
+        }
     }
 }

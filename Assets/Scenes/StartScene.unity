@@ -2274,7 +2274,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: "W, A, S, D: \uC774\uB3D9\n\nR: \uCD1D \uC7AC\uC7A5\uC804 \n\n\uB9C8\uC6B0\uC2A4
     \uC67C\uCABD: \uCD1D \uBC1C\uC0AC\n\n\uB9C8\uC6B0\uC2A4 \uC774\uB3D9: \uCE74\uBA54\uB77C
-    \uD68C\uC804\n\nTAP: \uCD1D \uBAA8\uB4DC \uBC14\uAFB8\uAE30"
+    \uD68C\uC804\n\nTAP: \uCD1D \uBAA8\uB4DC \uBC14\uAFB8\uAE30\n\nESC: \uC77C\uC2DC\uC815\uC9C0"
 --- !u!222 &1576949632
 CanvasRenderer:
   m_ObjectHideFlags: 0
