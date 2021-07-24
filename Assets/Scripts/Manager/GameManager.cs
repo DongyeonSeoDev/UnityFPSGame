@@ -12,10 +12,12 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Text timeText = null;
     [SerializeField] private Text gameOverTimeText = null;
+    [SerializeField] private Text gameOverStageText = null;
     [SerializeField] private Text gunStateText = null;
     [SerializeField] private string[] gunStateTexts;
 
     public CanvasGroup gameOverCanvasGroup;
+    
     /// <summary>
     /// 0: RestartBtn
     /// 1: EndBtn
@@ -120,6 +122,11 @@ public class GameManager : MonoBehaviour
         if (gameOverTimeText == null)
         {
             Debug.LogError("gameOverTimeText에 Text가 없습니다.");
+        }
+
+        if (gameOverStageText == null)
+        {
+            Debug.LogError("gameOverStageText가 없습니다.");
         }
 
         if (gunStateText == null)
@@ -375,11 +382,12 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        gameStateManager.DataClear();
-        gameStateManager.Save();
-
         isPlay = false;
         gameOverTimeText.text = "Time: " + TimeDisplay();
+        gameOverStageText.text = "Stage: " + gameStateManager.Stage;
+
+        gameStateManager.DataClear();
+        gameStateManager.Save();
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;

@@ -9,6 +9,7 @@ public class ClearCheckManager : MonoBehaviour
 {
     [SerializeField] private CanvasGroup clearCanvasGroup;
     [SerializeField] private Text timeText;
+    [SerializeField] private Text stageText;
 
     /// <summary>
     /// 0: ExitBtn
@@ -64,6 +65,11 @@ public class ClearCheckManager : MonoBehaviour
         if (timeText == null)
         {
             Debug.LogError("timeText에 Text가 없습니다.");
+        }
+
+        if (stageText == null)
+        {
+            Debug.LogError("stageText에 Text가 없습니다.");
         }
 
         if (sound == null)
@@ -125,6 +131,7 @@ public class ClearCheckManager : MonoBehaviour
 
         GameManager.Instance.isPlay = false;
         timeText.text = "Time: " + GameManager.Instance.TimeDisplay();
+        stageText.text = "Score: " + gameStateManager.Stage;
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
