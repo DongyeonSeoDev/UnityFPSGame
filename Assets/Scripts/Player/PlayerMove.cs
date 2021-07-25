@@ -64,6 +64,8 @@ public class PlayerMove : MonoBehaviour
     private GunAnimation gunAnimation = null;
     private GameStateManager gameStateManager = null;
 
+    private GameManager gameManager = null;
+
     public int Hp 
     {
         get { return hp; }
@@ -98,6 +100,7 @@ public class PlayerMove : MonoBehaviour
     private void Awake()
     {
         gameStateManager = GameStateManager.Instance;
+        gameManager = GameManager.Instance;
 
         if (gameStateManager == null)
         {
@@ -118,11 +121,11 @@ public class PlayerMove : MonoBehaviour
         currentBulletCount = gameStateManager.bulletCount;
         def = gameStateManager.playerDef;
         autoGun = gameStateManager.autoGun;
-        GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
+        gameManager.GunModeUIChange(autoGun ? 1 : 0);
 
-        GameManager.Instance.BulletCountUI(currentBulletCount);
-        GameManager.Instance.AttackTextUI((int)damage);
-        GameManager.Instance.DefTextUI(def);
+        gameManager.BulletCountUI(currentBulletCount);
+        gameManager.AttackTextUI((int)damage);
+        gameManager.DefTextUI(def);
 
         if (soundObject == null)
         {
@@ -141,7 +144,14 @@ public class PlayerMove : MonoBehaviour
 
     void Update()
     {
-        if (!GameManager.Instance.isPlay) return;
+        if (!gameManager.isPlay) return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            gameManager.Pause();
+        }
+
+        if (gameManager.isPause) return;
 
         CameraRotation();
         CharacterRotation();
@@ -165,7 +175,7 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             autoGun = !autoGun;
-            GameManager.Instance.GunModeUIChange(autoGun ? 1 : 0);
+            gameManager.GunModeUIChange(autoGun ? 1 : 0);
 
             isAttackable = false;
             PoolManager.GetItem<Sound>().soundPlay(switchGunSound, 1f, 2f);
@@ -175,11 +185,6 @@ public class PlayerMove : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reload();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.Instance.Pause();
         }
     }
 
@@ -284,7 +289,7 @@ public class PlayerMove : MonoBehaviour
 
             particle.Play();
             currentBulletCount--;
-            GameManager.Instance.BulletCountUI(currentBulletCount);
+            gameManager.BulletCountUI(currentBulletCount);
 
             if (autoGun)
             {
@@ -320,7 +325,7 @@ public class PlayerMove : MonoBehaviour
     {
         isReload = false;
 
-        GameManager.Instance.BulletCountUI(currentBulletCount);
+        gameManager.BulletCountUI(currentBulletCount);
     }
 
     public void Damage(int damage)
@@ -345,7 +350,7 @@ public class PlayerMove : MonoBehaviour
         isGameOver = true;
 
         gunAnimation.AnimationEnd();
-        GameManager.Instance.GameOver();
+        gameManager.GameOver();
         gun.SetActive(false);
     }
 
