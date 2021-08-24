@@ -83,7 +83,7 @@ public class PlayerMove : MonoBehaviour
             if (hp < 0) hp = 0;
 
             sb.Remove(0, sb.Length);
-            sb.Append("HP: ");
+            sb.Append("Ã¼·Â : ");
             sb.Append(hp);
             sb.Append('/');
             sb.Append(maxHp);

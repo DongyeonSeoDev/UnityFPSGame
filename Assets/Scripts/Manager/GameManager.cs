@@ -383,8 +383,8 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         isPlay = false;
-        gameOverTimeText.text = "Time: " + TimeDisplay();
-        gameOverStageText.text = "Stage: " + gameStateManager.Stage;
+        gameOverTimeText.text = "시간 : " + TimeDisplay();
+        gameOverStageText.text = "스테이지 : " + gameStateManager.Stage;
 
         gameStateManager.DataClear();
         gameStateManager.Save();
@@ -431,7 +431,7 @@ public class GameManager : MonoBehaviour
     public void BulletCountUI(int bulletCount)
     {
         sb.Remove(0, sb.Length);
-        sb.Append("총알: ");
+        sb.Append("총알 : ");
         sb.Append(bulletCount);
         sb.Append("/30");
 
@@ -443,7 +443,7 @@ public class GameManager : MonoBehaviour
     public void AttackTextUI(int attack)
     {
         sb.Remove(0, sb.Length);
-        sb.Append("공격력: ");
+        sb.Append("공격력 : ");
         sb.Append(attack);
 
         attackText.text = sb.ToString();
@@ -452,7 +452,7 @@ public class GameManager : MonoBehaviour
     public void DefTextUI(int def)
     {
         sb.Remove(0, sb.Length);
-        sb.Append("방어력: ");
+        sb.Append("방어력 : ");
         sb.Append(def);
 
         defText.text = sb.ToString();

@@ -130,8 +130,8 @@ public class ClearCheckManager : MonoBehaviour
         isGameClear = true;
 
         GameManager.Instance.isPlay = false;
-        timeText.text = "Time: " + GameManager.Instance.TimeDisplay();
-        stageText.text = "Score: " + gameStateManager.Stage;
+        timeText.text = "시간 : " + GameManager.Instance.TimeDisplay();
+        stageText.text = "스테이지 : " + gameStateManager.Stage;
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
