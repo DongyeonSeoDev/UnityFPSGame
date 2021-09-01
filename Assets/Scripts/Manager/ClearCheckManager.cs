@@ -49,12 +49,12 @@ public class ClearCheckManager : MonoBehaviour
 
         if (clearButton[0] == null)
         {
-            Debug.LogError("exitButton이 없습니다.");
+            Debug.LogError("clearButton[0]이 없습니다.");
         }
 
         if (clearButton[1] == null)
         {
-            Debug.LogError("clearButton이 없습니다.");
+            Debug.LogError("clearButton[1]이 없습니다.");
         }
 
         if (clearCanvasGroup == null)

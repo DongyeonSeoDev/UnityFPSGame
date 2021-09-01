@@ -48,7 +48,12 @@ public class GameManager : MonoBehaviour
     public CanvasGroup pause = null;
     public Button continueButton = null;
     public Button retryButton = null;
+    public Button keyButton = null;
     public Button exitButton = null;
+
+    public GameObject keyPanel = null;
+    public Button keyPanelExitButton = null;
+
     public bool isPause = false;
 
     public static GameManager Instance
@@ -282,6 +287,30 @@ public class GameManager : MonoBehaviour
             exitButton.onClick.AddListener(() =>
             {
                 Application.Quit();
+            });
+        }
+
+        if (keyButton == null)
+        {
+            Debug.LogError("keyButton이 없습니다.");
+        }
+        else
+        {
+            keyButton.onClick.AddListener(() =>
+            {
+                keyPanel.SetActive(true);
+            });
+        }
+
+        if (keyPanelExitButton == null)
+        {
+            Debug.LogError("keyPanelExitButton이 없습니다.");
+        }
+        else
+        {
+            keyPanelExitButton.onClick.AddListener(() =>
+            {
+                keyPanel.SetActive(false);
             });
         }
 
