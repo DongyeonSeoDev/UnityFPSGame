@@ -14,11 +14,6 @@ public class DamageText : MonoBehaviour
     private void Awake()
     {
         text = FindObjectOfType<TextMesh>();
-
-        if (text == null)
-        {
-            Debug.LogError("text가 없습니다.");
-        }
     }
 
     public void ShowText(string textValue, Vector3 startPosition, Vector3 lookPosition, Vector3 size, Color textColor)

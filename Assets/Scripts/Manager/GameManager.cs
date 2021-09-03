@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -119,150 +120,24 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        if (timeText == null)
+        try
         {
-            Debug.LogError("timeText에 Text가 없습니다.");
-        }
+            playerMove = FindObjectOfType<PlayerMove>();
 
-        if (gameOverTimeText == null)
-        {
-            Debug.LogError("gameOverTimeText에 Text가 없습니다.");
-        }
+            if (playerMove == null)
+            {
+                throw new Exception("playerMove가 없습니다.");
+            }
 
-        if (gameOverStageText == null)
-        {
-            Debug.LogError("gameOverStageText가 없습니다.");
-        }
+            gameStateManager = FindObjectOfType<GameStateManager>();
 
-        if (gunStateText == null)
-        {
-            Debug.LogError("gunStateText에 Text가 없습니다.");
-        }
+            clearCheckManager = FindObjectOfType<ClearCheckManager>();
 
-        if (gameOverCanvasGroup == null)
-        {
-            Debug.LogError("gameOverCanvasGroup이 없습니다.");
-        }
-
-        if (gameOverButton[0] == null)
-        {
-            Debug.LogError("ReSetButton이 없습니다.");
-        }
-
-        if (gameOverButton[1] == null)
-        {
-            Debug.LogError("EndButton이 없습니다.");
-        }
-
-        if (sound == null)
-        {
-            Debug.LogError("sound가 없습니다.");
-        }
-
-        if (clip == null)
-        {
-            Debug.LogError("clip이 없습니다.");
-        }
-
-        if (stageText == null)
-        {
-            Debug.LogError("stageText가 없습니다.");
-        }
-
-        if (damageTextObject == null)
-        {
-            Debug.LogError("damageTextObject가 없습니다.");
-        }
-
-        if (damageTexts == null)
-        {
-            Debug.LogError("damageTexts가 없습니다.");
-        }
-
-        gameStateManager = FindObjectOfType<GameStateManager>();
-
-        if (gameStateManager == null)
-        {
-            Debug.LogError("gameStateManager가 없습니다.");
-        }
-
-        playerMove = FindObjectOfType<PlayerMove>();
-
-        if (playerMove == null)
-        {
-            Debug.LogError("playerMove가 없습니다.");
-        }
-
-        if (enemys == null)
-        {
-            Debug.LogError("enemys가 없습니다.");
-        }
-
-        if (traps == null)
-        {
-            Debug.LogError("traps가 없습니다.");
-        }
-
-        clearCheckManager = FindObjectOfType<ClearCheckManager>();
-
-        if (clearCheckManager == null)
-        {
-            Debug.LogError("clearCheckManager가 없습니다.");
-        }
-
-        if (bulletUI == null)
-        {
-            Debug.LogError("bulletUI가 없습니다.");
-        }
-
-        if (bulletImage == null)
-        {
-            Debug.LogError("bulletImage가 없습니다.");
-        }
-
-        if (attackText == null)
-        {
-            Debug.LogError("attackText가 없습니다.");
-        }
-
-        if (defText == null)
-        {
-            Debug.LogError("defText가 없습니다.");
-        }
-
-        if (itemText == null)
-        {
-            Debug.LogError("itemtext가 없습니다.");
-        }
-
-        if (itemTexts == null)
-        {
-            Debug.LogError("itemTexts가 없습니다.");
-        }
-
-        if (mazeState == null)
-        {
-            Debug.LogError("mazeState가 없습니다.");
-        }
-
-        if (continueButton == null)
-        {
-            Debug.LogError("continueButton이 없습니다.");
-        }
-        else
-        {
             continueButton.onClick.AddListener(() =>
             {
                 Pause();
             });
-        }
 
-        if (retryButton == null)
-        {
-            Debug.LogError("retryButton이 없습니다.");
-        }
-        else
-        {
             retryButton.onClick.AddListener(() =>
             {
                 Time.timeScale = 1f;
@@ -276,107 +151,90 @@ public class GameManager : MonoBehaviour
                 DOTween.KillAll();
                 SceneManager.LoadScene("Maze");
             });
-        }
 
-        if (exitButton == null)
-        {
-            Debug.LogError("exitButton이 없습니다.");
-        }
-        else
-        {
             exitButton.onClick.AddListener(() =>
             {
                 Application.Quit();
             });
-        }
 
-        if (keyButton == null)
-        {
-            Debug.LogError("keyButton이 없습니다.");
-        }
-        else
-        {
             keyButton.onClick.AddListener(() =>
             {
                 keyPanel.SetActive(true);
             });
-        }
 
-        if (keyPanelExitButton == null)
-        {
-            Debug.LogError("keyPanelExitButton이 없습니다.");
-        }
-        else
-        {
             keyPanelExitButton.onClick.AddListener(() =>
             {
                 keyPanel.SetActive(false);
             });
-        }
 
-        PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
-        PoolManager.CreatePool<ItemText>(itemText, itemTexts, 5);
+            PoolManager.CreatePool<DamageText>(damageTextObject, damageTexts, 20);
+            PoolManager.CreatePool<ItemText>(itemText, itemTexts, 5);
 
-        gameOverButton[0].onClick.AddListener(() =>
-        {
-            Time.timeScale = 1f;
+            gameOverButton[0].onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
 
-            PoolManager.pool.Clear();
-            PoolManager.prefabDictionary.Clear();
+                PoolManager.pool.Clear();
+                PoolManager.prefabDictionary.Clear();
 
-            DOTween.KillAll();
-            SceneManager.LoadScene("Maze");
-        });
+                DOTween.KillAll();
+                SceneManager.LoadScene("Maze");
+            });
 
-        gameOverButton[1].onClick.AddListener(() =>
-        {
-            Application.Quit();
-        });
+            gameOverButton[1].onClick.AddListener(() =>
+            {
+                Application.Quit();
+            });
 
-        instance = this;
-        isPlay = true;
+            instance = this;
+            isPlay = true;
 
-        sb.Remove(0, sb.Length);
-        sb.Append(gameStateManager.Stage);
-        sb.Append(" 스테이지");
-
-        stageText.text = sb.ToString();
-        time = gameStateManager.time;
-        timeText.text = TimeDisplay();
-
-        if (gameStateManager.mazeMode == eMazeMode.SPEED)
-        {
-            traps.SetActive(false);
-            enemys.SetActive(false);
-
-            isSpeedMode = true;
-            startTime = time;
-        }
-
-        enemyCount = enemys.transform.childCount;
-
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        ShowMazeState();
-
-        if (gameStateManager.mazeMode == eMazeMode.SPEED)
-        {
-            mazeModeText.text = "남은 시간";
-        }
-        else if (gameStateManager.mazeMode == eMazeMode.ALLKILLENEMY)
-        {
-            mazeModeText.text = "남은 적";
-            ShowMazeEnemy(enemyCount - enemyKillCount);
-        }
-        else
-        {
-            mazeModeText.text = "탈출하세요!";
             sb.Remove(0, sb.Length);
-            sb.Append("최고기록: ");
-            sb.Append(gameStateManager.highScoreStage);
-            sb.Append("스테이지");
-            mazeModeValue.text = sb.ToString();
+            sb.Append(gameStateManager.Stage);
+            sb.Append(" 스테이지");
+
+            stageText.text = sb.ToString();
+            time = gameStateManager.time;
+            timeText.text = TimeDisplay();
+
+            if (gameStateManager.mazeMode == eMazeMode.SPEED)
+            {
+                traps.SetActive(false);
+                enemys.SetActive(false);
+
+                isSpeedMode = true;
+                startTime = time;
+            }
+
+            enemyCount = enemys.transform.childCount;
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+
+            ShowMazeState();
+
+            if (gameStateManager.mazeMode == eMazeMode.SPEED)
+            {
+                mazeModeText.text = "남은 시간";
+            }
+            else if (gameStateManager.mazeMode == eMazeMode.ALLKILLENEMY)
+            {
+                mazeModeText.text = "남은 적";
+                ShowMazeEnemy(enemyCount - enemyKillCount);
+            }
+            else
+            {
+                mazeModeText.text = "탈출하세요!";
+                sb.Remove(0, sb.Length);
+                sb.Append("최고기록: ");
+                sb.Append(gameStateManager.highScoreStage);
+                sb.Append("스테이지");
+                mazeModeValue.text = sb.ToString();
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e.Message);
         }
     }
 
@@ -411,27 +269,35 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        isPlay = false;
-        gameOverTimeText.text = "시간 : " + TimeDisplay();
-        gameOverStageText.text = "스테이지 : " + gameStateManager.Stage;
-
-        gameStateManager.DataClear();
-        gameStateManager.Save();
-
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.Confined;
-
-        gameOverCanvasGroup.blocksRaycasts = true;
-        gameOverCanvasGroup.interactable = true;
-
-        sound.clip = clip;
-        sound.loop = false;
-        sound.Play();
-
-        gameOverCanvasGroup.DOFade(1f, 0.5f).OnComplete(() =>
+        try
         {
-            Time.timeScale = 0f;
-        });
+            isPlay = false;
+            gameOverTimeText.text = "시간 : " + TimeDisplay();
+            gameOverStageText.text = "스테이지 : " + gameStateManager.Stage;
+
+            gameStateManager.DataClear();
+            gameStateManager.Save();
+
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.Confined;
+
+            gameOverCanvasGroup.blocksRaycasts = true;
+            gameOverCanvasGroup.interactable = true;
+
+            sound.clip = clip;
+            sound.loop = false;
+            sound.Play();
+
+            gameOverCanvasGroup.DOFade(1f, 0.5f).OnComplete(() =>
+            {
+                Time.timeScale = 0f;
+            });
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+        
     }
 
     public string TimeDisplay(float time = 0)

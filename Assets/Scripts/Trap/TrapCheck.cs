@@ -14,12 +14,6 @@ public class TrapCheck : MonoBehaviour
     private void Awake()
     {
         playerMove = FindObjectOfType<PlayerMove>();
-
-        if (playerMove == null)
-        {
-            Debug.LogError("playerMove를 찾을 수 없습니다.");
-        }
-
         attackDamage = attackDamage * GameStateManager.Instance.Stage;
     }
 

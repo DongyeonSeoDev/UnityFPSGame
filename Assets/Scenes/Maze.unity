@@ -18192,7 +18192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 284801095}
---- !u!82 &990294187
+--- !u!82 &990294186
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20369,11 +20369,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1104157589}
   m_CullTransparentMesh: 1
---- !u!1 &1117277408 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000014204504060, guid: efebddd0b5766bd499be8b63f581de68, type: 3}
-  m_PrefabInstance: {fileID: 1780416324}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1155293001
 GameObject:
   m_ObjectHideFlags: 0
@@ -28625,7 +28620,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8be85e82801f0e458d084d96aff0ce1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  box: {fileID: 1117277408}
+  box: {fileID: 1780416325}
   destroyBox: {fileID: 531818952}
   portion: {fileID: 1482919890}
   effect: {fileID: 649111544}
@@ -29443,6 +29438,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efebddd0b5766bd499be8b63f581de68, type: 3}
+--- !u!1 &1780416325 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000014204504060, guid: efebddd0b5766bd499be8b63f581de68, type: 3}
+  m_PrefabInstance: {fileID: 1780416324}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1781773170
 GameObject:
   m_ObjectHideFlags: 0

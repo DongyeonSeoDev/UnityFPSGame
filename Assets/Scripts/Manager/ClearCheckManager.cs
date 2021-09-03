@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using System;
 
 public class ClearCheckManager : MonoBehaviour
 {
@@ -33,82 +34,43 @@ public class ClearCheckManager : MonoBehaviour
 
     private void Awake()
     {
-        playerMove = FindObjectOfType<PlayerMove>();
-
-        if (playerMove == null)
+        try
         {
-            Debug.LogError("playerMove가 없습니다.");
-        }
+            playerMove = FindObjectOfType<PlayerMove>();
+            gameStateManager = GameStateManager.Instance;
 
-        gameStateManager = GameStateManager.Instance;
-
-        if (gameStateManager == null)
-        {
-            Debug.LogError("gameStateManager가 없습니다.");
-        }
-
-        if (clearButton[0] == null)
-        {
-            Debug.LogError("clearButton[0]이 없습니다.");
-        }
-
-        if (clearButton[1] == null)
-        {
-            Debug.LogError("clearButton[1]이 없습니다.");
-        }
-
-        if (clearCanvasGroup == null)
-        {
-            Debug.LogError("clearCanvasGroup이 없습니다.");
-        }
-
-        if (timeText == null)
-        {
-            Debug.LogError("timeText에 Text가 없습니다.");
-        }
-
-        if (stageText == null)
-        {
-            Debug.LogError("stageText에 Text가 없습니다.");
-        }
-
-        if (sound == null)
-        {
-            Debug.LogError("sound가 없습니다.");
-        }
-
-        if (clip == null)
-        {
-            Debug.LogError("clip이 없습니다.");
-        }
-
-        clearButton[0].onClick.AddListener(() =>
-        {
-            Application.Quit();
-        });
-
-        clearButton[1].onClick.AddListener(() =>
-        {
-            Time.timeScale = 1f;
-
-            PoolManager.pool.Clear();
-            PoolManager.prefabDictionary.Clear();
-
-            DOTween.KillAll();
-
-            if (gameStateManager.mazeSize == eMazeSize.LARGE) 
+            clearButton[0].onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("Maze2");
-            }
-            else
-            {
-                SceneManager.LoadScene("Maze");
-            }
-        });
+                Application.Quit();
+            });
 
-        if (GameStateManager.Instance.mazeMode == eMazeMode.ALLKILLENEMY)
+            clearButton[1].onClick.AddListener(() =>
+            {
+                Time.timeScale = 1f;
+
+                PoolManager.pool.Clear();
+                PoolManager.prefabDictionary.Clear();
+
+                DOTween.KillAll();
+
+                if (gameStateManager.mazeSize == eMazeSize.LARGE)
+                {
+                    SceneManager.LoadScene("Maze2");
+                }
+                else
+                {
+                    SceneManager.LoadScene("Maze");
+                }
+            });
+
+            if (GameStateManager.Instance.mazeMode == eMazeMode.ALLKILLENEMY)
+            {
+                isAllEnemyKillMode = true;
+            }
+        }
+        catch (Exception e)
         {
-            isAllEnemyKillMode = true;
+            Debug.LogError(e.Message);
         }
     }
 
@@ -118,7 +80,14 @@ public class ClearCheckManager : MonoBehaviour
         {
             if (other.CompareTag("PLAYER"))
             {
-                Clear();
+                try
+                {
+                    Clear();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError(e.Message);
+                }
             }
         }
     }
@@ -144,7 +113,7 @@ public class ClearCheckManager : MonoBehaviour
         gameStateManager.Stage++;
         gameStateManager.time = GameManager.Instance.time;
 
-        int randomNum = Random.Range(0, 100);
+        int randomNum = UnityEngine.Random.Range(0, 100);
 
         if (randomNum < speedModeProbability)
         {
@@ -159,7 +128,7 @@ public class ClearCheckManager : MonoBehaviour
             gameStateManager.mazeMode = eMazeMode.NORMAL;
         }
 
-        randomNum = Random.Range(0, 100);
+        randomNum = UnityEngine.Random.Range(0, 100);
 
         if (randomNum < largeMazeProbability)
         {

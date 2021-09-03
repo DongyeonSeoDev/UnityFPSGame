@@ -9,11 +9,6 @@ public class Sound : MonoBehaviour
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-
-        if (audioSource == null)
-        {
-            Debug.LogError("audioSource가 없습니다.");
-        }
     }
 
     public void soundPlay(AudioClip clip, float volume, float playTime)

@@ -4,6 +4,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -99,41 +100,30 @@ public class PlayerMove : MonoBehaviour
 
     private void Awake()
     {
-        gameStateManager = GameStateManager.Instance;
-        gameManager = GameManager.Instance;
-
-        if (gameStateManager == null)
+        try
         {
-            Debug.LogError("gameStateManager가 없습니다.");
-        }
+            gameStateManager = GameStateManager.Instance;
+            gameManager = GameManager.Instance;
 
-        gunAnimation = FindObjectOfType<GunAnimation>();
+            gunAnimation = FindObjectOfType<GunAnimation>();
+            myRigidbody = GetComponent<Rigidbody>();
 
-        if (gunAnimation == null)
-        {
-            Debug.LogError("gunAnimation이 없습니다.");
-        }
+            damage = gameStateManager.playerDamage;
+            Hp = gameStateManager.playerHP;
+            currentBulletCount = gameStateManager.bulletCount;
+            def = gameStateManager.playerDef;
+            autoGun = gameStateManager.autoGun;
+            gameManager.GunModeUIChange(autoGun ? 1 : 0);
 
-        myRigidbody = GetComponent<Rigidbody>();
+            gameManager.BulletCountUI(currentBulletCount);
+            gameManager.AttackTextUI((int)damage);
+            gameManager.DefTextUI(def);
 
-        damage = gameStateManager.playerDamage;
-        Hp = gameStateManager.playerHP;
-        currentBulletCount = gameStateManager.bulletCount;
-        def = gameStateManager.playerDef;
-        autoGun = gameStateManager.autoGun;
-        gameManager.GunModeUIChange(autoGun ? 1 : 0);
-
-        gameManager.BulletCountUI(currentBulletCount);
-        gameManager.AttackTextUI((int)damage);
-        gameManager.DefTextUI(def);
-
-        if (soundObject == null)
-        {
-            Debug.LogError("soundObject가 없습니다.");
-        }
-        else
-        {
             PoolManager.CreatePool<Sound>(soundObject, transform, 10);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
         }
     }
 
@@ -260,7 +250,7 @@ public class PlayerMove : MonoBehaviour
 
             RaycastHit hit;
 
-            int randomNumber = Random.Range(0, 10);
+            int randomNumber = UnityEngine.Random.Range(0, 10);
             damage = damage + randomNumber - 5;
 
             if (Physics.Raycast(firePosition.transform.position, firePosition.transform.forward, out hit, range))

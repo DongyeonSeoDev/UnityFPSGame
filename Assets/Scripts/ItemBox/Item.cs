@@ -23,11 +23,11 @@ public class Item : MonoBehaviour
     private void Awake()
     {
         playerMove = FindObjectOfType<PlayerMove>();
-        if (playerMove == null) Debug.LogError("PlayerMove가 없습니다.");
 
-        if (audioSource == null) Debug.LogError("audioSource가 없습니다.");
-
-        if (sound[0] == null) Debug.LogError("sound는 1개 이상 있어야 합니다.");
+        if (sound[0] == null)
+        {
+            Debug.LogError("sound는 1개 이상 있어야 합니다.");
+        }
     }
 
     private void OnCollisionEnter(Collision collision)

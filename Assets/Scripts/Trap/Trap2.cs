@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,29 +13,36 @@ public class Trap2 : MonoBehaviour
 
     private void Awake()
     {
-        if (particle == null)
+        try
         {
-            Debug.LogError("particle이 없습니다.");
+            if (particle == null)
+            {
+                throw new Exception("particle이 없습니다.");
+            }
+
+            makeMaze = FindObjectOfType<MakeMaze>();
+
+            if (makeMaze == null)
+            {
+                throw new Exception("makeMaze가 없습니다.");
+            }
+
+            audioSource = GetComponent<AudioSource>();
+
+            if (audioSource == null)
+            {
+                throw new Exception("audioSource가 없습니다.");
+            }
+
+            int randomNum = UnityEngine.Random.Range(0, makeMaze.enablePosition.Count);
+            transform.position = makeMaze.enablePosition[randomNum];
+            makeMaze.enablePosition.RemoveAt(randomNum);
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
         }
-
-        makeMaze = FindObjectOfType<MakeMaze>();
-
-        if (makeMaze == null)
+        catch (Exception e)
         {
-            Debug.LogError("makeMaze가 없습니다.");
+            Debug.LogError(e.Message);
         }
-
-        audioSource = GetComponent<AudioSource>();
-
-        if (audioSource == null)
-        {
-            Debug.LogError("audioSource가 없습니다.");
-        }
-
-        int randomNum = Random.Range(0, makeMaze.enablePosition.Count);
-        transform.position = makeMaze.enablePosition[randomNum];
-        makeMaze.enablePosition.RemoveAt(randomNum);
-        transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class GunAnimation : MonoBehaviour
 {
@@ -24,32 +25,24 @@ public class GunAnimation : MonoBehaviour
 
     private void Awake()
     {
-        if (playerCamera == null)
+        try
         {
-            Debug.LogError("Camera가 없습니다.");
-        }
+            playerMove = FindObjectOfType<PlayerMove>();
 
-        if (magazine == null)
+            moveSequence = DOTween.Sequence();
+            fireSequence = DOTween.Sequence();
+            continuousFireSequence = DOTween.Sequence();
+            reloadSequence = DOTween.Sequence();
+
+            CreateMoveSequence();
+            CreateFireSequence(fireSequence, -10f, 0.1f);
+            CreateFireSequence(continuousFireSequence, -5f, 0.05f);
+            CreateReloadSequence();
+        }
+        catch (Exception e)
         {
-            Debug.LogError("magazin이 없습니다.");
+            Debug.LogError(e.Message);
         }
-
-        playerMove = FindObjectOfType<PlayerMove>();
-
-        if (playerMove == null)
-        {
-            Debug.LogError("playerMove가 없습니다.");
-        }
-
-        moveSequence = DOTween.Sequence();
-        fireSequence = DOTween.Sequence();
-        continuousFireSequence = DOTween.Sequence();
-        reloadSequence = DOTween.Sequence();
-
-        CreateMoveSequence();
-        CreateFireSequence(fireSequence, -10f, 0.1f);
-        CreateFireSequence(continuousFireSequence, -5f, 0.05f);
-        CreateReloadSequence();
     }
 
     private void CreateMoveSequence()

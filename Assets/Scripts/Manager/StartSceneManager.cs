@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using DG.Tweening;
-
+using System;
 
 public class StartSceneManager : MonoBehaviour
 {
@@ -22,55 +22,62 @@ public class StartSceneManager : MonoBehaviour
 
     private void Start()
     {
-        if (image == null)
+        try
         {
-            Debug.Log("spriteRenderer가 없습니다.");
-        }
-
-        startButton.onClick.AddListener(() =>
-        {
-            if (isButtonClick) return;
-
-            audioSource.clip = sound;
-            audioSource.Play();
-            image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
+            if (image == null)
             {
-                DOTween.KillAll();
+                throw new Exception("image가 없습니다.");
+            }
 
-                if (GameStateManager.Instance.mazeSize == eMazeSize.NORMAL)
+            startButton.onClick.AddListener(() =>
+            {
+                if (isButtonClick) return;
+
+                audioSource.clip = sound;
+                audioSource.Play();
+                image.DOColor(new Color(0, 0, 0, 1), 1f).OnComplete(() =>
                 {
-                    SceneManager.LoadScene("Maze");
-                }
-                else
-                {
-                    SceneManager.LoadScene("Maze2");
-                }
+                    DOTween.KillAll();
+
+                    if (GameStateManager.Instance.mazeSize == eMazeSize.NORMAL)
+                    {
+                        SceneManager.LoadScene("Maze");
+                    }
+                    else
+                    {
+                        SceneManager.LoadScene("Maze2");
+                    }
+                });
+
+                isButtonClick = true;
             });
 
-            isButtonClick = true;
-        });
+            keyButton.onClick.AddListener(() =>
+            {
+                keyPanel.SetActive(true);
+                gun.SetActive(false);
+            });
 
-        keyButton.onClick.AddListener(() =>
+            exitButton.onClick.AddListener(() =>
+            {
+                keyPanel.SetActive(false);
+                gun.SetActive(true);
+            });
+
+            Invoke("soundPlay", 0.5f);
+
+            image.DOColor(new Color(0, 0, 0, 0), 2f).OnComplete(() =>
+            {
+                startButton.gameObject.SetActive(true);
+                keyButton.gameObject.SetActive(true);
+                startButton.transform.DOScale(Vector3.one, 1f);
+                keyButton.transform.DOScale(Vector3.one, 1f);
+            });
+        }
+        catch (Exception e)
         {
-            keyPanel.SetActive(true);
-            gun.SetActive(false);
-        });
-
-        exitButton.onClick.AddListener(() =>
-        {
-            keyPanel.SetActive(false);
-            gun.SetActive(true);
-        });
-
-        Invoke("soundPlay", 0.5f);
-
-        image.DOColor(new Color(0, 0, 0, 0), 2f).OnComplete(() =>
-        {
-            startButton.gameObject.SetActive(true);
-            keyButton.gameObject.SetActive(true);
-            startButton.transform.DOScale(Vector3.one, 1f);
-            keyButton.transform.DOScale(Vector3.one, 1f);
-        });
+            Debug.Log(e.Message);
+        }
     }
 
     private void soundPlay()

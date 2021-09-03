@@ -11,11 +11,6 @@ public class ItemText : MonoBehaviour
     private void Awake()
     {
         text = GetComponent<Text>();
-
-        if (text == null)
-        {
-            Debug.LogError("text가 없습니다.");
-        }
     }
 
     public void ShowText(string text, Color color)
