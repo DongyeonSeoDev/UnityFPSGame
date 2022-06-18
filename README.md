@@ -1,5 +1,5 @@
 # Maze Shooting
-### 유니티로 만든 FPS 게임입니다.
+### 유니티로 혼자서 만든 FPS 게임입니다.
 
 ![screenshot1](./img/1.png)
 
